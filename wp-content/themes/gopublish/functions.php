@@ -230,16 +230,7 @@ function snowriter() {
 		echo $writer; if ($jobtitle) echo ', '.$jobtitle; echo '<br />';
 		}
 	}
-} 
-function remove_admin_bar_links() {
-	global $wp_admin_bar;
-	$wp_admin_bar->remove_menu('my-account-with-avatar');
-	$wp_admin_bar->remove_menu('new-content');
-	$wp_admin_bar->remove_menu('updates');
-	$wp_admin_bar->remove_menu('comments');
-	$wp_admin_bar->remove_menu('appearance');
 }
-add_action( 'wp_before_admin_bar_render', 'remove_admin_bar_links' );
 function my_admin_bar_menu() {
 	global $wp_admin_bar;
 	if ( !is_user_logged_in() || !is_admin_bar_showing() )
@@ -278,7 +269,7 @@ function my_admin_bar_menu() {
 	'title' => __( 'Logout'),
 	'href' => wp_logout_url( home_url() ) ) );
 }
-add_action('admin_bar_menu', 'my_admin_bar_menu');
+//add_action('admin_bar_menu', 'my_admin_bar_menu');
 
 function sno_dashboard_widget() {
 	// Display whatever it is you want to show
@@ -310,7 +301,7 @@ function sno_dashboard_widget() {
 		<?php
 } 
 
-add_action('wp_dashboard_setup', 'sno_add_dashboard_widgets' );
+//add_action('wp_dashboard_setup', 'sno_add_dashboard_widgets' );
 
 function sno_add_dashboard_widgets() {
 	wp_add_dashboard_widget('sno_announcements', 'GoPublish News & Announcements', 'sno_dashboard_widget');
@@ -388,5 +379,42 @@ function sno_hide_buttons()
   }
 }
 add_action('admin_head','sno_hide_buttons');
- 
-?>
+
+
+
+function remove_admin_bar_links() {
+    global $wp_admin_bar;
+    $wp_admin_bar->remove_menu('new-content');
+    $wp_admin_bar->remove_menu('updates');
+    $wp_admin_bar->remove_menu('appearance');
+    $wp_admin_bar->remove_menu('wp-logo');
+}
+add_action( 'wp_before_admin_bar_render', 'remove_admin_bar_links' );
+
+function add_admin_bar_link($wp_admin_bar) {
+    $class = 'epg-media-link';
+    $wp_admin_bar->add_menu( array(
+        'id' => 'epg-media-link',
+        'title' => __( 'EPG Media, LLC' ),
+        'href' => __('http://www.epgmediallc.com'),
+
+    ) );
+    $wp_admin_bar->add_menu( array(
+        'parent' => 'epg-media-link',
+        'id' => 'epg-media-time-off',
+        'title' => __( 'Time Off Request' ),
+        'href' => __('http://www.epgmediallc.com/time-off-request/'),
+    ) );
+    $wp_admin_bar->add_menu( array(
+        'parent' => 'epg-media-link',
+        'id' => 'epg-media-support',
+        'title' => __( 'IT Request' ),
+        'href' => __('http://www.epgmediallc.com/it-request/'),
+    ) );
+
+}
+// Add EPG Media menu links
+add_action('admin_bar_menu', 'add_admin_bar_link', 50);
+
+// Set max number of post revisions to hold
+if (!defined('WP_POST_REVISIONS')) define('WP_POST_REVISIONS', 5);
