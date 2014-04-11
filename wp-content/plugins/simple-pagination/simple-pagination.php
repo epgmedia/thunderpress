@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin\' uh?' );
 Plugin Name: Simple Pagination
 Plugin URI: http://wordpress.org/plugin/simple-pagination/
 Description: Simple Pagination allows to set up an advanced pagination for posts and comments. You have an easier navigation on your WordPress.
-Version: 2.1.5
+Version: 2.1.7
 Author: GeekPress
 Author URI: http://www.geekpress.fr/
 
@@ -28,7 +28,7 @@ Author URI: http://www.geekpress.fr/
 
 
 // Define contants
-define( 'SP_VERSION' , '2.1.5' );
+define( 'SP_VERSION' , '2.1.7' );
 define( 'SP_URL' , plugins_url(plugin_basename(dirname(__FILE__)).'/') );
 
 class Simple_Pagination {
@@ -809,14 +809,14 @@ class Simple_Pagination {
 								 );
 
          // Before link Markup
-         $before_link = html_entity_decode($this->options['before_link']);
+         $before_link = isset( $this->options['before_link'] ) ? html_entity_decode($this->options['before_link']) : '';
 
          // After link Markup
-         $after_link = html_entity_decode($this->options['after_link']);
+         $after_link = isset( $this->options['after_link'] ) ? html_entity_decode($this->options['after_link']) : '';
 
 
          // Beginning of the HTML markup of pagination
-         $this->output .= html_entity_decode($this->options['before_pagination']);
+         $this->output .= isset( $this->options['before_pagination'] ) ? html_entity_decode($this->options['before_pagination']) : '';
          if( $text_pages )
          	$this->output.= '<span class="pages">' . $text_pages . '</span>';
 
@@ -825,7 +825,7 @@ class Simple_Pagination {
 
 	    	$link = $this->formate_link(1);
 
-	    	if( $this->options['text_first_page'] )
+	    	if( !empty( $this->options['text_first_page'] ) )
                 	$this->output .= $before_link . '<a class="first" href="' . esc_url($link) . '">' . $this->options['text_first_page'] . '</a>' . $after_link;
 
 	    endif;
@@ -851,7 +851,7 @@ class Simple_Pagination {
 
                 $link = $this->formate_link($current - 1);
 
-                if( $this->options['text_previous_page']  )
+                if( !empty( $this->options['text_previous_page'] ) )
                 		$this->output .= $before_link . '<a class="previous" href="' . esc_url($link) . '">' . $this->options['text_previous_page'] . '</a>' . $after_link;
         endif;
 
@@ -882,7 +882,7 @@ class Simple_Pagination {
 
                 $link = $this->formate_link(number_format_i18n($current + 1));
 
-                if( $this->options['text_next_page'] )
+                if( !empty($this->options['text_next_page']) )
                 	$this->output .= $before_link . '<a class="next" href="' . esc_url($link) . '">' . $this->options['text_next_page'] . '</a>' . $after_link;
         endif;
 
@@ -904,12 +904,12 @@ class Simple_Pagination {
 
 	    	$link = $this->formate_link($total);
 
-	    	if( $this->options['text_last_page'] )
+	    	if( !empty( $this->options['text_last_page'] ) )
                 	$this->output .= $before_link . '<a class="last" href="' . esc_url($link) . '">' . $this->options['text_last_page'] . '</a>' . $after_link;
 
 	    endif;
 
-	    $this->output.= html_entity_decode($this->options['after_pagination']);
+	    $this->output.= isset( $this->options['after_pagination'] ) ? html_entity_decode($this->options['after_pagination']) : '';
 
 	    echo $this->output;
 	}
@@ -928,8 +928,7 @@ class Simple_Pagination {
 		
 		$link = str_replace('%_%', "?page=%#%", $this->base);
         $link = str_replace('%#%', $page, $link);
-        $link = str_replace( $wp_rewrite->pagination_base . '/1','', $link);
-        $link = str_replace( $wp_rewrite->pagination_base . '/1','', $link);
+        $link = str_replace( $wp_rewrite->pagination_base . '/1/','', $link );
         $link = str_replace('?paged=1','', $link);
 
         if ( $this->add_args )

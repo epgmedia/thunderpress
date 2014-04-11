@@ -4,7 +4,7 @@ Tags: paginate, pagination, page, paging, pages, navigation, posts, post, commen
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TSGWZURGHBRCA
 Requires at least: 2.7
 Tested up to: 3.8
-Stable tag: 2.1.5
+Stable tag: 2.1.7
 
 Simple Pagination allows to set up an advanced pagination for posts and comments. You have an easier navigation on your WordPress.
 
@@ -65,6 +65,14 @@ You would replace those two lines with this:
 You can uncheck the "Simple Pagination CSS file" option from the settings page and add your own styles to your theme's style.css
 
 == Changelog ==
+
+= 2.1.7 =
+
+* Fixed 7 PHP errors notices
+
+= 2.1.6 =
+
+* Fixed bug with URL pagination between 10 to 19
 
 = 2.1.5 =
 

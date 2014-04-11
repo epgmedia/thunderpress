@@ -294,7 +294,7 @@ function wptouch_get_bloginfo( $setting_name ) {
 			$setting = $wptouch_pro->get_current_theme_uri();
 			break;
 		case 'site_title':
-			$setting = $settings->site_title;
+			$setting = stripslashes( $settings->site_title );
 			break;
 		case 'wptouch_directory':
 			$setting = WPTOUCH_DIR;
@@ -408,5 +408,13 @@ function wptouch_desktop_bloginfo( $param ) {
 function wptouch_can_cloud_install( $theme = true ) {
 	global $wptouch_pro;
 	return $wptouch_pro->can_perform_cloud_install( $theme );
+}
+
+function wptouchize_it( $str ) {
+	if ( defined( 'WPTOUCH_IS_FREE' ) ) {
+		return str_replace( 'WPtouch Pro', 'WPtouch', $str );
+	} else {
+		return $str;
+	}
 }
 

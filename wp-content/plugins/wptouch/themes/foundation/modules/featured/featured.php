@@ -123,7 +123,7 @@ function foundation_determine_images() {
 		case 'posts':
 			$post_ids = explode( ',', str_replace( ' ', '', $settings->featured_post_ids ) );
 			if ( is_array( $post_ids ) && count( $post_ids ) ) {
-				$new_posts = new WP_Query( array( 'post__in'  => $post_ids, 'posts_per_page' => $args[ 'max_search' ], 'post_type' => 'any' ) );
+				$new_posts = new WP_Query( array( 'post__in'  => $post_ids, 'posts_per_page' => $args[ 'max_search' ], 'post_type' => 'any', 'orderby' => 'post__in' ) );
 			}
 			break;
 		case 'latest':
@@ -349,22 +349,22 @@ function foundation_featured_settings( $page_options ) {
 				)
 			),
 			wptouch_add_setting(
-				'list',
+				'text',
 				'featured_tag',
 				__( 'Only this tag', 'wptouch-pro' ),
-				'',
+				__( 'Enter the tag/category slug name', 'wptouch-pro' ),
 				WPTOUCH_SETTING_BASIC,
 				'1.0',
-				foundation_get_tag_list()
+				false //foundation_get_tag_list()
 			),
 			wptouch_add_setting(
-				'list',
+				'text',
 				'featured_category',
 				__( 'Only this category', 'wptouch-pro' ),
-				'',
+				__( 'Enter the tag/category slug name', 'wptouch-pro' ),
 				WPTOUCH_SETTING_BASIC,
 				'1.0',
-				foundation_get_category_list()
+				false //foundation_get_category_list()
 			),
 			wptouch_add_setting(
 				'text',

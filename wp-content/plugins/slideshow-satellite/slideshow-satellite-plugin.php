@@ -50,6 +50,7 @@ class SatellitePlugin
         $this->add_filter('the_posts', 'conditionally_add_scripts_and_styles'); // the_posts gets triggered before wp_head
         $this->add_action("wp_head", 'print_styles');
         $this->add_action('wp_ajax_plupload_action', "g_plupload_action");
+        $this->add_action('wp_ajax_satl_order_slides', 'satl_ajax_reorder');
         
         return true;
     }
@@ -59,21 +60,21 @@ class SatellitePlugin
         wp_register_style(SATL_PLUGIN_NAME . "_adstyle", $adminStyleUrl);
         wp_enqueue_style(SATL_PLUGIN_NAME . "_adstyle");
         if ($page == "satellite-slides" || $page == "satellite-galleries") {
-          wp_enqueue_style('bootstrap',"http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css");
+          wp_enqueue_style('bootstrap',SATL_PLUGIN_URL. '/css/bootstrap.min.css?v=' . SATL_VERSION);
         }
 
     }
     
     function print_styles() {
+
         if ($this->get_option('play')) :
-        ?>
-        <style type="text/css">
-          div.timer {
-            opacity: 0;
-          }
-        </style>      <?
-      
+
+            echo '<style type="text/css">';
+            echo '  div.timer { opacity: 0; }';
+            echo '</style>';
+
         endif;
+
     }
 
     function conditionally_add_scripts_and_styles($posts){
@@ -121,7 +122,7 @@ class SatellitePlugin
                     $background = $this->get_option('background');
                     $infobackground = $this->get_option('infobackground');
                     $infocolor = $this->get_option('infocolor');
-                    
+
                     $satlStyleUrl .= $this->Premium->addProStyling($width_temp,'width_temp',$pID);
                     $satlStyleUrl .= $this->Premium->addProStyling($height_temp,'height_temp',$pID);
                     $satlStyleUrl .= $this->Premium->addProStyling($background,'background',$pID);
@@ -249,10 +250,15 @@ class SatellitePlugin
         $preloader = array(
             'quantity'    => 1,
         );
+        $advanced = array(
+            'jquery'    => 0
+        );
         $this->add_option('Watermark', $watermark);
         $this->add_option('Images', $images);
         $this->add_option('styles', $styles);
         $this->add_option('Preloader', $preloader);
+        $this->add_option('Advanced', $advanced);
+//        $this->add_option('Awesome', null);
         
         //General Settings
         $this->add_option('autospeed', 10);
@@ -262,7 +268,6 @@ class SatellitePlugin
         $this->add_option('information', "Y");
         $this->add_option('infospeed', 10);
         $this->add_option('embedss', "Y");
-        $this->add_option('ggljquery', "Y");
         $this->add_option('nav_opacity', 30);
         $this->add_option('navhover', 70);
         $this->add_option('nolinker', false);
@@ -496,9 +501,19 @@ class SatellitePlugin
 
     function enqueue_scripts() {
       $this->log_me("enqueuing scripts");
-      if ($this->get_option('ggljquery') == "Y") {
+        $advanced = $this->get_option('Advanced');
+        $jquery = $advanced['jquery'];
+        $this->log_me('jquery'.$jquery);
+      if ($jquery != 0) {
           wp_deregister_script( 'jquery' );
-          wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js');
+          if ($jquery == 1) {
+              wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js');
+          } elseif ($jquery == 10) {
+              wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
+          } else {
+              wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+          }
+
       }
       wp_enqueue_script('jquery');
 
@@ -560,14 +575,6 @@ class SatellitePlugin
         exit;
     }
 
-    function plugin_base() {
-        return rtrim(dirname(__FILE__), '/');
-    }
-
-    function url() {
-        return rtrim(WP_PLUGIN_URL, '/') . '/' . substr(preg_replace("/\\" . "/" . "/si", "/", $this->plugin_base()), strlen(ABSPATH));
-    }
-
     function add_option($name = '', $value = '') {
         if (add_option($this->pre . $name, $value)) {
             return true;
@@ -592,15 +599,6 @@ class SatellitePlugin
             }
             return $option;
         }
-        return false;
-    }
-
-    function debug($var = array()) {
-        if ($this->debugging) {
-            echo '<pre>' . print_r($var, true) . '</pre>';
-            return true;
-        }
-
         return false;
     }
 
@@ -774,6 +772,21 @@ class SatellitePlugin
         return false;
     }
 
+    public function satl_ajax_reorder() {
+
+        if (!empty($_REQUEST['slides_order'])) {
+            $slideOrder = $_REQUEST['slides_order'];
+            foreach ($slideOrder as $order => $slide_id) {
+                $this -> Slide -> save_field('slide_order', $order, array('id' => $slide_id));
+            }
+
+            _e('Slides have been reordered', SATL_PLUGIN_NAME);
+
+        }
+
+        die();
+    }
+
     /**
      * Add Settings link to plugins - code from GD Star Ratings
      */
@@ -822,6 +835,7 @@ class SatellitePlugin
       }
       return false;
     }
+
     public function log_me($message) {
         if (WP_DEBUG === true) {
             if (is_array($message) || is_object($message)) {
@@ -831,5 +845,24 @@ class SatellitePlugin
             }
         }
     }
+
+    function plugin_base() {
+        return rtrim(dirname(__FILE__), '/');
+    }
+
+    function url() {
+        return rtrim(WP_PLUGIN_URL, '/') . '/' . substr(preg_replace("/\\" . "/" . "/si", "/", $this->plugin_base()), strlen(ABSPATH));
+    }
+
+    function debug($var = array()) {
+        if ($this->debugging) {
+            echo '<pre>' . print_r($var, true) . '</pre>';
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 }
-?>

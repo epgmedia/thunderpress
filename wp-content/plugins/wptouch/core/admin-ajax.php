@@ -133,8 +133,16 @@ function wptouch_admin_handle_ajax( $wptouch_pro, $ajax_action ) {
 			if ( defined( 'WPTOUCH_IS_FREE' ) ) {
 				$content = wp_remote_get( 'http://wptouch-pro-3.s3.amazonaws.com/WPtouchBoard/free/page.xhtml' );
 			} else {
-				$content = wp_remote_get( 'http://wptouch-pro-3.s3.amazonaws.com/WPtouchBoard/pro/page.xhtml' );
+				$content = wp_remote_get( 'http://wptouch-pro-3.s3.amazonaws.com/WPtouchBoard/pro/3.2/page.xhtml' );
 			}
+
+			if ( !is_wp_error( $content ) ) {
+				echo $content['body'];
+			}
+
+			break;
+		case 'load-upgrade-area':
+			$content = wp_remote_get( 'http://wptouch-pro-3.s3.amazonaws.com/WPtouchBoard/upgrade/page.xhtml' );
 
 			if ( !is_wp_error( $content ) ) {
 				echo $content['body'];

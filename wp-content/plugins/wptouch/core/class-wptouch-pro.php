@@ -357,7 +357,7 @@ class WPtouchProThree {
 				echo '</p></div>';
 			} else {
 				echo '<div class="error" id="repair-cloud-failure" style="margin-top: 10px;"><p>';
-				echo sprintf( __( 'You server setup is preventing WPtouch from installing your active theme from the Cloud. Please visit %sthis article%s for more information on how to fix it.', 'wptouch-pro' ), '<a href="http://www.bravenewcode.com/support/knowledgebase/themes-or-extensions-cannot-be-downloaded/">', '</a>' );
+				echo sprintf( __( 'Your server setup is preventing WPtouch from installing your active theme from the Cloud. Please visit %sthis article%s for more information on how to fix it.', 'wptouch-pro' ), '<a href="http://www.bravenewcode.com/support/knowledgebase/themes-or-extensions-cannot-be-downloaded/">', '</a>' );
 				echo '</p></div>';
 			}
 		} else if ( $this->has_critical_notifications() ) {
@@ -391,23 +391,32 @@ class WPtouchProThree {
 	}
 
 	function set_cache_cookie() {
-		global $wptouch_pro;
+		if ( !is_admin() && function_exists( 'wptouch_cache_admin_bar' ) ) {
+			global $wptouch_pro;
 
-		$cookie_value = 'desktop';
-		if ( $this->is_mobile_device ) {
-			if ( $this->showing_mobile_theme ) {
-				$cookie_value = 'mobile';
-			} else {
-				$cookie_value = 'mobile-desktop';
+			$cookie_value = 'desktop';
+
+			if ( $this->is_mobile_device ) {
+				if ( $this->showing_mobile_theme ) {
+					$cookie_value = 'mobile';
+				} else {
+					$cookie_value = 'mobile-desktop';
+				}
 			}
-		}
 
- 		if ( !isset( $_COOKIE[ WPTOUCH_CACHE_COOKIE ] ) || ( isset( $_COOKIE[ WPTOUCH_CACHE_COOKIE ] ) && $_COOKIE[ WPTOUCH_CACHE_COOKIE] != $cookie_value ) ) {
-			setcookie( WPTOUCH_CACHE_COOKIE, $cookie_value, time() + 3600, '/' );
-			$_COOKIE[ WPTOUCH_CACHE_COOKIE ] = $cookie_value;
-		}
+			if ( function_exists( 'wptouch_addon_should_cache_desktop' ) ) {
+				$cache_desktop = wptouch_addon_should_cache_desktop();
+			} else {
+				$cache_desktop = false;
+			}
 
-		if ( !is_admin() ) {
+			if ( $this->is_mobile_device || $cache_desktop === true ) {
+		 		if ( !isset( $_COOKIE[ WPTOUCH_CACHE_COOKIE ] ) || ( isset( $_COOKIE[ WPTOUCH_CACHE_COOKIE ] ) && $_COOKIE[ WPTOUCH_CACHE_COOKIE] != $cookie_value ) ) {
+					setcookie( WPTOUCH_CACHE_COOKIE, $cookie_value, time() + 3600, '/' );
+					$_COOKIE[ WPTOUCH_CACHE_COOKIE ] = $cookie_value;
+				}
+			}
+
 			do_action( 'wptouch_cache_page' );
 		}
 	}
@@ -1110,7 +1119,7 @@ class WPtouchProThree {
 
     function check_for_update() {
     	if ( function_exists( 'wptouch_pro_check_for_update' ) ) {
-    		wptouch_pro_check_for_update();
+    		return wptouch_pro_check_for_update();
     	}
     }
 
@@ -2067,6 +2076,8 @@ class WPtouchProThree {
 	function delete_theme_add_on_cache() {
 		delete_transient( '_wptouch_available_cloud_addons' );
 		delete_transient( '_wptouch_available_cloud_themes' );
+		delete_transient( '_wptouch_bncid_latest_version' );
+		delete_transient( '_wptouch_bncid_has_license' );
 	}
 
 	function activate_license() {
@@ -2144,6 +2155,9 @@ class WPtouchProThree {
 		$settings = wptouch_get_settings();
 
 		if ( $settings->show_wptouch_in_footer ) {
+			global $footer_settings;
+			$footer_settings = $settings;
+
 			echo wptouch_capture_include_file( WPTOUCH_DIR . '/include/html/footer.php' );
 		}
 
@@ -2351,20 +2365,6 @@ class WPtouchProThree {
 
 		wp_enqueue_style( 'wptouch-theme-css', wptouch_check_url_ssl( $css_file ), 'wptouch-parent-theme-css', WPTOUCH_VERSION );
 
-		// Load child RTL css file
-		if ( wptouch_should_load_rtl() && file_exists( WP_CONTENT_DIR . '/' . $settings->current_theme_location . '/' . $settings->current_theme_name . '/' . $this->get_active_device_class() . '/' . $settings->current_theme_name . '-rtl.css' ) ) {
-			wp_enqueue_style(
-				'wptouch-rtl',
-				wptouch_check_url_ssl( $this->check_and_use_css_file(
-					$settings->current_theme_location . '/' . $settings->current_theme_name . '/' . $this->get_active_device_class() . '/' . $settings->current_theme_name . '-rtl.css',
-					WP_CONTENT_DIR,
-					WP_CONTENT_URL
-				) ),
-	 			array( 'wptouch-theme-css' ),
-	 			WPTOUCH_VERSION
-	 		);
-
-		}
 	}
 
 	function setup_child_theme_styles() {
@@ -2384,7 +2384,7 @@ class WPtouchProThree {
 				echo "<!-- Powered by WPtouch: " . WPTOUCH_VERSION . " -->";
 			} else {
 				echo "<!-- Powered by WPtouch Pro: " . WPTOUCH_VERSION . " -->";
-			}			
+			}
 		}
 	}
 
@@ -2464,12 +2464,27 @@ class WPtouchProThree {
 	}
 
 	function process_submitted_settings() {
+		$old_settings = wptouch_get_settings();
+
 		if ( 'POST' != $_SERVER['REQUEST_METHOD'] ) {
 			return;
 		}
 
 		require_once( WPTOUCH_DIR . '/core/admin-settings.php' );
 		wptouch_settings_process( $this );
+
+		$this->delete_theme_add_on_cache();
+
+		$new_settings = wptouch_get_settings();
+
+		if ( !$old_settings->add_referral_code && $new_settings->add_referral_code ) {
+			$bnc_settings = wptouch_get_settings( 'bncid' );
+			$bnc_settings->next_update_check_time = 0;
+			$bnc_settings->save();
+
+			$this->setup_bncapi();
+			wptouch_check_api();
+		}
 	}
 
 	function get_theme_copy_num( $base ) {
@@ -2492,10 +2507,6 @@ class WPtouchProThree {
 
 		// 3.0 domain specific filtering
 		$settings = apply_filters( 'wptouch_update_settings_domain', $settings, $domain );
-
-		if ( $domain == 'bncid' ) {
-			WPTOUCH_DEBUG( WPTOUCH_VERBOSE, 'Saving settings to database with domain ' . $domain . " " . print_r( $settings, true ) );
-		}
 
 		// Save the old domain
 		$old_domain = $settings->domain;

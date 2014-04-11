@@ -7,12 +7,21 @@ function wptouch_has_license() {
 	global $wptouch_pro;
 	$wptouch_pro->setup_bncapi();
 
-	return $wptouch_pro->bnc_api->verify_site_license( WPTOUCH_PRO_BNCAPI_PRODUCT_NAME );
+	if ( false === ( $has_license = get_transient( '_wptouch_bncid_has_license' ) ) ) {
+		$has_license = $wptouch_pro->bnc_api->verify_site_license( WPTOUCH_PRO_BNCAPI_PRODUCT_NAME );
+
+		set_transient( '_wptouch_bncid_has_license', $has_license, WPTOUCH_API_GENERAL_CACHE_TIME );
+	}
+
+	return $has_license;
 }
 
 function wptouch_is_upgrade_available() {
 	global $wptouch_pro;
-	return $wptouch_pro->check_for_update();
+
+	$upgrade_avail = $wptouch_pro->check_for_update();
+
+	return $upgrade_avail;
 }
 
 function wptouch_get_available_cloud_themes() {
@@ -54,6 +63,8 @@ function wptouch_check_api() {
 
 						$bnc_settings->license_accepted = false;
 						$bnc_settings->license_accepted_time = 0;
+						$bnc_settings->referral_user_id = false;
+
 						$bnc_settings->save();
 					}
 				}
@@ -62,6 +73,10 @@ function wptouch_check_api() {
 				$bnc_settings->failures = 0;
 				$bnc_settings->license_accepted = true;
 				$bnc_settings->license_accepted_time = $now;
+
+				if ( isset( $result[ 'user_id'] ) ) {
+					$bnc_settings->referral_user_id = $result[ 'user_id' ];
+				}
 			}
 		} else {
 			WPTOUCH_DEBUG( WPTOUCH_INFO, '...no info? ' . print_r( $result, true ) );
