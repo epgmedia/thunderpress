@@ -22,7 +22,7 @@
  Plugin Name: ShareThis
  Plugin URI: http://www.sharethis.com
  Description: Let your visitors share a post/page with others. Supports e-mail and posting to social bookmarking sites. <a href="options-general.php?page=sharethis.php">Configuration options are here</a>. Questions on configuration, etc.? Make sure to read the README.
- Version: 7.0.11
+ Version: 7.0.14
  Author: <a href="http://www.sharethis.com">Kalpak Shah@ShareThis</a>
  Author URI: http://www.sharethis.com
  */
@@ -200,10 +200,6 @@ function getNewTag($oldTag){
 	return $newTag='<script type="text/javascript" charset="utf-8" src="'.$newUrl.'"></script>';
 }
 
-if (isset($_GET['activate']) && $_GET['activate'] == 'true') {
-	install_ShareThis();
-}
-
 function st_widget_head() {
 	adding_st_filters();
 	$widget = get_option('st_widget');
@@ -311,11 +307,11 @@ function st_show_buttons($content) {
 
 	if(($post->post_type == 'page' && !in_array($post->ID , $selectedPage)) || $post->post_type == 'post') { 
 		if ($getTopOptions == 'top' && $getBotOptions == 'bot') 
-			return '<p>'.st_makeEntries().'</p>'.$content.'<p>'.st_makeEntries().'</p>';	
+			return '<p class="no-break">'.st_makeEntries().'</p>'.$content.'<p>'.st_makeEntries().'</p>';	
 		else if ($getTopOptions == 'top' && empty($getBotOptions))
-			return '<p>'.st_makeEntries().'</p>'.$content;
+			return '<p class="no-break">'.st_makeEntries().'</p>'.$content;
 		else if(empty($getTopOptions) && $getBotOptions == 'bot')
-			return $content.'<p>'.st_makeEntries().'</p>';
+			return $content.'<p class="no-break">'.st_makeEntries().'</p>';
 	}
 	
 	return $content;
@@ -335,10 +331,17 @@ function adding_st_filters(){
 	// 2006-06-02 Expected behavior is that the feed link will show up if an option is not 'no'
 	if (get_option('st_add_to_content') != 'no' || get_option('st_add_to_page') != 'no') {
 		add_filter('the_content', 'st_add_widget');
-
-		// 2008-08-15 Excerpts don't play nice due to strip_tags().
-		//add_filter('get_the_excerpt', 'st_remove_st_add_link',9);
-		//add_filter('the_excerpt', 'st_add_widget');
+		
+		// META GRAPH Plugin conflicts with Buttons Excerpts
+		$current_plugins = get_option('active_plugins');		
+		if( !( (in_array('wp-open-graph/wp-open-graph.php', $current_plugins)) ||
+			(in_array('wp-open-graph-meta/wp-open-graph-meta.php', $current_plugins)) )
+			) {
+			// 2008-08-15 Excerpts don't play nice due to strip_tags().
+			add_filter('get_the_excerpt', 'st_remove_st_add_link',9);
+			add_filter('the_excerpt', 'st_add_widget');			
+		}
+		
 	}
 }
 
@@ -517,6 +520,7 @@ function st_options_form() {
 	$stPostsTop = get_option('st_posts_on_top');
 	$stPostsBot = get_option('st_posts_on_bot');
 	$freshInstalation = empty($services)?1:0;
+	$sharenow_style = "3"; // Default Style
 
 	$checkPagesTop = '';
 	$checkPagesBot = '';
@@ -1126,6 +1130,7 @@ function getPageIdsRecursive($page, &$arrIds) {
 }
 
 function st_get_list_of_pages() {
+	$option = '';
 	$args = array(
 		'sort_order' => 'DESC',
 		'sort_column' => 'post_date',
@@ -1174,6 +1179,7 @@ function st_get_list_of_pages() {
 }
 
 function getPageRecursive($page, &$tempArr, $selectedPages, $elemDisabled, $lvl = 0) {
+	$option = '';
 	$lvl++;
 	$pg = get_pages(array('child_of' => $page->ID));
 	foreach ( $pg as $p ) {
@@ -1274,6 +1280,22 @@ function st_styles(){
 			echo $custom_css;
 			echo "\n</style>\n";
 		}
+		if(preg_match('/hoverbuttons/',$widget)){
+			echo "<style type='text/css'>
+					#sthoverbuttons #sthoverbuttonsMain, .stMainServices {
+						-webkit-box-sizing: content-box !important;
+						-moz-box-sizing:    content-box !important;
+						box-sizing:         content-box !important;
+					}
+				</style>";
+		}
+		
+		echo "<style type='text/css'>
+					.no-break br {
+						display: none !important;
+					}
+			</style>";
+		
 	}	
 }
 
@@ -1293,5 +1315,6 @@ add_action('init', 'st_request_handler', 9999);
 add_action('admin_menu', 'st_menu_items');
 add_action( 'wp_enqueue_scripts', 'st_styles' ); 
 add_action('admin_print_scripts', 'st_load_custom_scripts');
+register_activation_hook( __FILE__, 'install_ShareThis');
 register_uninstall_hook( __FILE__, 'uninstall_ShareThis');
 ?>

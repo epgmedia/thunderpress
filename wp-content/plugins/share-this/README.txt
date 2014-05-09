@@ -10,6 +10,11 @@ Social Charge your Content with ShareThis - features Social Analytics, CopyNShar
 
 == Description ==
 
+**Updates 4/23/2014**
+
+New Look. Same Function.
+You may have been selected to get a free ShareThis Multi Post widget upgrade.
+This subtle change will give your social tools a more modern look and improved user interaction. And don’t worry, the widget still functions the same way so your users can choose from 120 social channels to share your content with their friends and family. [Learn More](http://support.sharethis.com/customer/portal/articles/517332-share-widget-faqs)
 
 **Increase social activity on your site with [ShareThis](www.sharethis.com)!**
 
@@ -32,10 +37,6 @@ Join the ShareThis Network of over 2.4M sites and get access to your analytics: 
 * Detailed reports on the top shared URLs of your site(s)
 * Top social channel reports
 * Analysis of the social quality of your site via [SQI – Social Quality Index](www.sharethis.com/sqi).
-
-
-**SnapSets Beta - Released on July 18, 2013**  
-We've just released [SnapSets](http://snapsets.sharethis.com/publishers.html) in open beta! Contact us to learn more. 
 
 **Track Users' Copy and Paste Shares**  
 [CopyNShare](http://support.sharethis.com/customer/portal/articles/517332#copynshare) is a ShareThis widget feature in open beta that enables you to track the shares that occur when a user copies and pastes your website's URL or content. Two options are available:
@@ -66,6 +67,19 @@ More information about the [ShareNow plugin for WordPress](http://support.sharet
 6. To enable Hovering Bar (floating share buttons), go to the ShareThis Options page and scroll down check the 'Enable Hovering Bar' button.
 
 == Changelog ==
+7.0.14
+1. Fix for ShareThis Settings keeps Resetting after activation of any plugin
+2. Fix for Warning messages display
+
+7.0.13
+Maintenance Fix
+Buttons not showing up on the Page
+
+7.0.12
+Maintenance Fixes
+1. HoverBar buttons get cut-off when placed on right position
+2. Unwanted <BR> Tags were getting inserted in button SPAN tags
+
 7.0.11
 Maintenance Fixes
 Fix for Conflict between Open Graph Plugin and ShareThis Plugin
