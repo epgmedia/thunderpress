@@ -121,8 +121,11 @@ class WPtouchDefaultSettingsBNCID30 extends WPtouchSettings {
 
 		$this->license_accepted = false;
 		$this->license_accepted_time = 0;
+
 		$this->next_update_check_time = 0;
-		$this->failures = 0;
+
+		$this->license_expired = false;
+		$this->license_expiry_date = 0;
 
 		$this->referral_user_id = false;
 	}
