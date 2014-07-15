@@ -42,9 +42,9 @@ function foundation_add_wpml_lang_switcher() {
 
 	// Check admin panel setting
 	if ( $settings->show_wpml_lang_switcher ) {
-		if ( function_exists( 'icl_get_languages' ) ) { 
-			$data = icl_get_languages( 'skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str' ); 
-			if ( $data ) { 
+		if ( function_exists( 'icl_get_languages' ) ) {
+			$data = icl_get_languages( 'skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str' );
+			if ( $data ) {
 				echo '<div id="wpml-language-chooser-wrap"><div id="wpml-language-chooser">';
 				echo '<strong>' . __( 'Language: ', 'wptouch-pro' ) . '</strong>';
 				echo '<select>';
@@ -53,10 +53,10 @@ function foundation_add_wpml_lang_switcher() {
 					if ( $item["active"] ) echo " selected";
 					echo '>' . $item['native_name'] . '</option>';
 				}
-				echo '</select>';		
-				echo '</div></div>';	
+				echo '</select>';
+				echo '</div></div>';
 			}
-		} 		
+		}
 	}
 
 }
@@ -627,21 +627,27 @@ function foundation_load_theme_modules() {
 		foreach( $theme_data->theme_support as $module ) {
 
 			$bootstrap_file = dirname( __FILE__ ) . '/modules/' . $module . '/' . $module . '.php';
+			$defined_name = 'WPTOUCH_MODULE_' . str_replace( '-', '_', strtoupper( $module ) ) . '_INSTALLED';
 
 			if ( file_exists( $bootstrap_file ) ) {
 				// Load the main bootstrap file
 				require_once( $bootstrap_file );
 
-				$defined_name = 'WPTOUCH_MODULE_' . str_replace( '-', '_', strtoupper( $module ) ) . '_INSTALLED';
-				define( $defined_name, '1' );
-			} else if ( !defined( 'WPTOUCH_IS_FREE' ) ) {
-				$alternate_location = WPTOUCH_DIR . '/pro/modules/' . $module . '/' . $module . '.php';
-
-				require_once( $alternate_location );
-
-				$defined_name = 'WPTOUCH_MODULE_' . str_replace( '-', '_', strtoupper( $module ) ) . '_INSTALLED';
 				define( $defined_name, '1' );
 			}
+
+			if ( !defined( 'WPTOUCH_IS_FREE' ) ) {
+				// Pro version
+				$alternate_location = WPTOUCH_DIR . '/pro/modules/' . $module . '/' . $module . '.php';
+
+				if ( file_exists( $alternate_location ) ) {
+					require_once( $alternate_location );
+
+					if ( !defined( $defined_name ) ) {
+						define( $defined_name, '1' );
+					}
+				}
+ 			}
 		}
 
 		// Force settings to be reloaded
@@ -767,14 +773,21 @@ function foundation_get_theme_colors() {
 /////* Foundation Functions (can be used by all child themes) */////
 
 /*
-If we're on iOS5 or iOS6.
-
-We'll setup media queries for client side detection of
-css features for fixed positioning ( -webkit-overflow-scrolling ),
-but if server-side iOS5/6 detection is needed, it's here  :)
+If we're on iOS7
 */
 function wptouch_fdn_iOS_7() {
 	if ( strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 7_' ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/*
+If we're on iOS8
+*/
+function wptouch_fdn_iOS_8() {
+	if ( strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 8_' ) ) {
 		return true;
 	} else {
 		return false;
@@ -786,10 +799,10 @@ If we're on iOS5+
 
 We'll setup media queries for client side detection of
 css features for fixed positioning ( -webkit-overflow-scrolling ),
-but if server-side iOS5/6 detection is needed, it's here  :)
+but if server-side detection is needed, it's here  :)
 */
 function wptouch_fdn_iOS_5_or_higher() {
-	if ( strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 5_' ) || strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 6_' ) || strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 7_' ) ) {
+	if ( strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 5_' ) || strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 6_' ) || strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 7_' ) || strpos( $_SERVER['HTTP_USER_AGENT'],'iPhone OS 8_' ) ) {
 		return true;
 	} else {
 		return false;

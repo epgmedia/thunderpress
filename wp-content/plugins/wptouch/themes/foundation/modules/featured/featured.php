@@ -289,7 +289,7 @@ function foundation_featured_settings( $page_options ) {
 				WPTOUCH_SETTING_BASIC,
 				'1.0.2'
 			),
-			wptouch_add_setting(
+			wptouch_add_pro_setting(
 				'checkbox',
 				'featured_continuous',
 				__( 'Continuously slide', 'wptouch-pro' ),

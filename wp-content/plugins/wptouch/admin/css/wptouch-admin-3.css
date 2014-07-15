@@ -53,7 +53,8 @@
 	color: #ff6b49;
 }
 
-#wptouch-settings-area .wptouch-section .new,#wptouch-settings-area .wptouch-section .advanced {
+#wptouch-settings-area .wptouch-section .new,
+#wptouch-settings-area .wptouch-section .advanced {
 	color: #fff;
 	border-radius: 3px;
 	margin-left: 2px;
@@ -66,6 +67,26 @@
 	font-size: 9px;
 	display: inline-block;
 	overflow: hidden;
+}
+
+#wptouch-settings-area .wptouch-section .pro {
+	color: #fff;
+	border-radius: 3px;
+	margin-left: 2px;
+	letter-spacing: 0;
+	padding: 1px 4px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	line-height: 11px;
+	font-weight: bold;
+	font-size: 9px;
+	display: inline-block;
+	overflow: hidden;	
+	background-color: #369;
+}
+
+#wptouch-settings-area.wptouch-not-free  .pro {
+	display: none;
 }
 
 #wptouch-settings-area .wptouch-section .new {
@@ -583,8 +604,8 @@ html[xmlns] .clearfix {
 #notification-drop {
 	outline: 0;
 	position: relative;
-	background-image: none;
-	border-color: #eee;
+	/* background-image: none; */
+	/* border-color: #eee; */
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	color: #999;
@@ -595,6 +616,7 @@ html[xmlns] .clearfix {
 #notification-drop:hover {
 	background-color: #fff;
 	border-color: #E5E5E5;
+	background-image: none;
 }
 
 .dropdown .number {
@@ -650,6 +672,18 @@ html[xmlns] .clearfix {
 
 .dropdown-menu .notifications ul li:last-child {
 	border-bottom-style: none;
+}
+
+#wptouch-settings-area button#upgrade-to-pro {
+	color: #eee;
+	margin-top: 20px;
+	background: #0074a2;
+	text-shadow: 1px 1px #333;
+}
+
+#wptouch-settings-area button#upgrade-to-pro:hover {
+	color: #fff;
+	background: #3390B5;	
 }
 
 /* @end */
@@ -760,6 +794,12 @@ h3.popover-title {
 	width: 350px;
 }
 
+#wptouch-settings-area #wptouch-addon-multi-ads textarea {
+	width: 70%;
+	font-size: 0.9em;
+	min-height: 150px;
+}
+
 #wptouch-settings-area .wptouch-section input[type="text"] {
 	width: 200px;
 }
@@ -796,7 +836,7 @@ input#preview.disabled {
 	zoom: 1;
 	*display: inline;
 	margin: 0;
-	padding: 12px 0 50px 15px;
+	padding: 9px 0 50px 15px;
 }
 
 #wptouch-settings-area .wptouch-section ul.padded li {
@@ -1900,7 +1940,7 @@ textarea#homepage_message {
 .license-status {
 	font-size: 16px;
 	margin-top: 25px;
-	width: 35%;
+	width: 50%;
 	display: none;
 }
 
@@ -1909,7 +1949,7 @@ textarea#homepage_message {
 	font-weight: normal;
 	font-style: normal;
 	color: #333;
-	width: 75%;
+	width: 95%;
 }
 
 #progress-license {
@@ -2436,14 +2476,13 @@ textarea#homepage_message {
 
 /* @group Selected Settings */
 
-
 .wptouch-free #section-setup-general-plugin-compat,
 .wptouch-free #section-desktop-theme-compatibility,
 .wptouch-free #setting-mobile_switch_link_target,
 .wptouch-free #setting-switch_link_method,
 .wptouch-free #section-setup-custom-styles,
 .wptouch-free #section-setup-backup {
-	display: none !important;
+	/* display: none !important; */
 }
 
 .wptouch-free #setting-bauhaus_use_infinite_scroll,
@@ -2460,7 +2499,7 @@ textarea#homepage_message {
 .wptouch-free #setting-social_linkedin_url,
 .wptouch-free #section-foundation-media-settings,
 .wptouch-free #setting-bauhaus_thumbnail_type {
-	display: none !important;
+	/* display: none !important; */
 }
 
 .wptouch-free span.new {
@@ -2471,7 +2510,15 @@ textarea#homepage_message {
 	display: none !important;
 }
 
+#setting-plugin-compat label {
+	display: inline-block;
+	margin-bottom: 5px;
+}
 
+.wptouch-free .pro-setting label,
+.wptouch-free .pro-setting .radio-group p {
+	color: #888;
+}
 
 /* @end */
 
