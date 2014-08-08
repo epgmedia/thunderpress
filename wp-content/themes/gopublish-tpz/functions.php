@@ -1,6 +1,8 @@
 <?php
 include(TEMPLATEPATH."/tools/theme-options.php");
 
+include( TEMPLATEPATH . '/tribe-events/functions.php' );
+
 add_option("home_left_column", '280', '', 'yes');
 add_option("home_center_column", '280', '', 'yes');
 add_option("home_right_column", '300', '', 'yes');
@@ -172,15 +174,15 @@ function page_id_to_name($id) {
     	if ($id == $page->page_ID) { return $page->page_name; break; }
 }
 
-	include(TEMPLATEPATH."/tools/enews.php");
-	include(TEMPLATEPATH."/tools/snotext.php");
-	include(TEMPLATEPATH."/tools/audio.php");
-	include(TEMPLATEPATH."/tools/video.php");
-	include(TEMPLATEPATH."/tools/videoembed.php");
-	include(TEMPLATEPATH."/tools/advertisement.php");
-	include(TEMPLATEPATH."/tools/categorywidget.php");
-	include(TEMPLATEPATH."/tools/productshowcase.php");
-	include(TEMPLATEPATH."/tools/pagewidget.php"); 
+include(TEMPLATEPATH."/tools/enews.php");
+include(TEMPLATEPATH."/tools/snotext.php");
+include(TEMPLATEPATH."/tools/audio.php");
+include(TEMPLATEPATH."/tools/video.php");
+include(TEMPLATEPATH."/tools/videoembed.php");
+include(TEMPLATEPATH."/tools/advertisement.php");
+include(TEMPLATEPATH."/tools/categorywidget.php");
+include(TEMPLATEPATH."/tools/productshowcase.php");
+include(TEMPLATEPATH."/tools/pagewidget.php");
 
 
 add_theme_support( 'nav-menus' );
