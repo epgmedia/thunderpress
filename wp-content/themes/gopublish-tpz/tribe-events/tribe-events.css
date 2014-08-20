@@ -1,5 +1,24 @@
 @charset "UTF-8";
 
+/**
+ * Main Color *
+ White Text with blue background
+*/
+.category-hero h2,
+.category-hero h2 a {
+	color: #ffffff;
+	background-color: #003366;
+}
+/**
+
+ * Secondary Color *
+ White text with orange background
+
+*/
+.featured-event-label {
+	color: #ffffff;
+	background-color: #C47425;
+}
 
 #tribe-events-pg-template {
 	float: left;
@@ -7,9 +26,16 @@
 	padding: 5px 0 0 10px;
 }
 
+h1.calendar-title {
+	margin: 10px;
+	font-weight: 400;
+}
+
 .events-hero {
 	width: 100%;
 	padding: 10px;
+	margin-top: 0;
+	margin-bottom: 50px;
 }
 
 .events-hero h1 {
@@ -27,13 +53,11 @@
 .category-hero h2 {
 	padding: 0.4em 0.3em;
 	text-align: center;
-	background-color:#003366;
 	z-index: 10;
 }
 
 .category-hero h2 a {
 	text-decoration: none;
-	color: #ffffff;
 	font-weight: 100;
 }
 
@@ -108,18 +132,59 @@
 	background-color: #f2f2f2;
 	border: 1px solid #ececec;
 	padding: 1.25em 0.5em;
-	margin: 0 0 1.25em 0;
+	margin: 0 0 1.8em 0;
 }
 
 .featured-event-label {
 	width: auto;
-	background-color: #C47425;
 	padding: 0.3em 0 0.2em 0.4em;
 	clear: both;
 }
 
 .featured-event-label span {
-	color: #ffffff;
 	font-size: 16px;
 	text-transform: uppercase;
+}
+
+.header-address {
+	text-decoration: underline;
+}
+
+.tribe-events-cal-links {
+	text-align: right;
+}
+
+a.tribe-events-gcal,
+a.tribe-events-ical {
+	float: none;
+	margin: 5px 6px 8px;
+}
+
+.tribe-events-event-meta .tribe-events-meta-group {
+	float: none;
+	display: block;
+	width: 100%;
+}
+
+.tribe-events-meta-group h3 {
+	border-bottom: 1px solid #000000;
+}
+
+.tribe-event-detail-label {
+	line-height: 1.4em;
+	margin: 10px 15px 10px 0;
+}
+
+.tribe-events-meta-group-details dt,
+.tribe-event-detail-label {
+	font-weight: bold;
+}
+
+.tribe-events-meta-group-details dd {
+	margin: 0 1em 0;
+}
+
+.tribe-events-meta-group-details dd:after {
+	content: "\A";
+	white-space: pre;
 }

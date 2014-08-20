@@ -12,10 +12,10 @@
 
 if ( !defined('ABSPATH') ) { die('-1'); }
 
-get_header();
+get_header(); ?>
 
 
-	before_calendar_content(); ?>
+	<?php before_calendar_content(); ?>
 
 	<div id="tribe-events-pg-template">
 		<?php tribe_events_before_html(); ?>
