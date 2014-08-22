@@ -4,6 +4,97 @@
  */
 
 include('class_category_images.php');
+include('admin-views/featured-event.class.php');
+include('admin-views/category-settings.php');
+
+/**
+ * Custom Region Taxonomy
+ */
+if ( ! function_exists( 'epg_event_regions' ) ) {
+
+	// Register Custom Taxonomy
+	function epg_event_regions() {
+
+		$labels = array(
+			'name'                       => 'Regions',
+			'singular_name'              => 'Region',
+			'menu_name'                  => 'Regions',
+			'all_items'                  => 'All Regions',
+			'parent_item'                => 'Parent Regions',
+			'parent_item_colon'          => 'Parent Region:',
+			'new_item_name'              => 'New Region',
+			'add_new_item'               => 'Add Region',
+			'edit_item'                  => 'Edit Region',
+			'update_item'                => 'Update Region',
+			'separate_items_with_commas' => 'Separate Regions with commas',
+			'search_items'               => 'Search Regions',
+			'add_or_remove_items'        => 'Add or remove Regions',
+			'choose_from_most_used'      => 'Choose from the most used Regions',
+			'not_found'                  => 'Not Found',
+		);
+		$rewrite = array(
+			'slug'                       => '/calendar/region',
+			'with_front'                 => false,
+			'hierarchical'               => true,
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => true,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'rewrite'                    => $rewrite,
+		);
+		register_taxonomy( 'event_regions', array( 'tribe_events' ), $args );
+
+	}
+
+	// Hook into the 'init' action
+	add_action( 'init', 'epg_event_regions', 0 );
+
+}
+
+/**
+ * Filter the archive_template with our custom function
+ */
+
+add_filter( 'taxonomy_template', 'region_archive', 0 );
+function region_archive( $single ) {
+	//global $wp_query, $post;
+
+	/* Checks for single template by post type */
+	if ( is_tax('event_regions') ) {
+		if ( file_exists( get_template_directory() . '/tribe-events/default-template.php' ) )
+			return get_template_directory() . '/tribe-events/default-template.php';
+	}
+
+	return $single;
+}
+
+/**
+ * Add important query args to region pages.
+ */
+add_action( 'pre_get_posts', 'region_query_args' );
+function region_query_args( &$wp_query ) {
+
+	if ( is_tax( 'event_regions' ) ) {
+		$wp_query->query['post_type'] = TribeEvents::POSTTYPE;
+		$wp_query->query_vars['eventDisplay'] = 'upcoming';
+		$wp_query->query_vars["posts_per_page"] = '10';
+		$wp_query->query_vars["start_date"] = date('Y-m-d H:i:s', strtotime("now"));
+	}
+}
+
+/**
+ * Enqueue scripts on regions pages
+ */
+add_filter( 'tribe_query_is_event_query', 'epg_region_event' );
+function epg_region_event( $tribe_is_event_query ) {
+	if ( is_tax( 'event_regions' ) ) return TRUE;
+
+	return $tribe_is_event_query;
+}
 
 /**
  *
@@ -36,9 +127,21 @@ function calendar_hero() {
  */
 function calendar_hero_categories() {
 
-	$categories = get_terms('tribe_events_cat', array('hide_empty' => false));
+	$options = get_option( TribeEvents::OPTIONNAME );
+	$categories = array(
+		'featured_category_1' => $options['featured_category_1'],
+		'featured_category_2' => $options['featured_category_2'],
+		'featured_category_3' => $options['featured_category_3'],
+		'featured_category_4' => $options['featured_category_4'],
+	);
 
-	foreach ( $categories as $category ) { ?>
+	$terms = array();
+
+	foreach ( $categories as $cat_key => $cat_val ) {
+		$terms[] = get_term( $cat_val, 'tribe_events_cat' );
+	}
+
+	foreach ( $terms as $category ) { ?>
 
 		<div class="category-hero">
 			<?php category_hero_post( $category ); ?>
@@ -125,21 +228,6 @@ function event_excerpt( $length = 100 ) {
 	$excerpt = ( the_excerpt() > 0 ? substr( the_excerpt(), 0, $length ) : '' );
 
 	return $excerpt;
-}
-
-
-add_action( 'admin_menu', 'addFeaturedBox' );
-
-function addFeaturedBox() {
-
-	add_meta_box( 'tribe_events_featured_event', 'Featured Event', 'eventFeaturedBox', 'tribe_events', 'side', 'default' );
-}
-
-function eventFeaturedBox() {
-
-	global $post;?>
-	<label class="selectit"><input value="yes" type="checkbox" <?php checked($post->menu_order == "-1") ?> name="Featured Event"> Make Featured</label>
-	<?php
 }
 
 /**
@@ -369,11 +457,10 @@ function epg_add_to_cal_link() {
  * Remove Other INformation
  *
  */
-add_action( 'wp_loaded', 'epg_event_no_additional_info' );
+add_action( 'wp_loaded', 'epg_event_no_additional_info', 400 );
 
 function epg_event_no_additional_info() {
-	remove_action(
-		'tribe_events_single_event_meta_primary_section_end',
-		array( 'TribeEventsPro_SingleEventMeta', 'additional_fields' )
-	);
+	$hook_name = 'tribe_events_single_event_meta_primary_section_end';
+	global $wp_filter;
+	$wp_filter[$hook_name] = null;
 }

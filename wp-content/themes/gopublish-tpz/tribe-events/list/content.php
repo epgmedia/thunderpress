@@ -34,7 +34,6 @@ if ( !defined('ABSPATH') ) { die('-1'); } ?>
 	</div><!-- #tribe-events-header -->
 	<?php do_action( 'tribe_events_after_header' ); ?>
 
-
 	<!-- Events Loop -->
 	<?php if ( have_posts() ) : ?>
 		<?php do_action( 'tribe_events_before_loop' ); ?>

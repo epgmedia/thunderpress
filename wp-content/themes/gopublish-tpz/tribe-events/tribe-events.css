@@ -4,6 +4,7 @@
  * Main Color *
  White Text with blue background
 */
+
 .category-hero h2,
 .category-hero h2 a {
 	color: #ffffff;
@@ -171,7 +172,7 @@ a.tribe-events-ical {
 }
 
 .tribe-event-detail-label {
-	line-height: 1.4em;
+	line-height: 1.5em;
 	margin: 10px 15px 10px 0;
 }
 

@@ -31,13 +31,18 @@ if ( ! class_exists( 'epg_cal_export' ) ) {
 
     class epg_cal_export {
 
-        private $events;
+		public $args;
+
+		/**
+		 * @var $events TribeEventsQuery object new Events Query
+		 */
+		private $events;
 
         /**
         * Create new Tribe Events query on instantiation
         */
         public function __construct( TribeEventsQuery $events ) {
-            $this->events = $events
+            $this->events = $events;
         }
 
         public function get_events( $args ) {
@@ -49,7 +54,8 @@ if ( ! class_exists( 'epg_cal_export' ) ) {
 
 }
 
-$export = new epg_cal_export;
+$export = new epg_cal_export();
+
 $args = array (
 	'post_status'            => 'published',
 	'pagination'             => false,
@@ -57,4 +63,4 @@ $args = array (
 	'monthnum'               => '10',
 );
 
-$events = $export->get_events( );
+$events = $export->get_events( $args );
