@@ -23,8 +23,6 @@ if ( class_exists( 'TribeField' ) ) {
 }
 
 
-
-
 add_action( 'add_meta_boxes', 'addFeaturedBox' );
 function addFeaturedBox() {
 	add_meta_box( 'tribe_events_featured_event', 'Featured Event', 'eventFeaturedBox', 'tribe_events', 'side', 'default' );
@@ -32,13 +30,12 @@ function addFeaturedBox() {
 
 function eventFeaturedBox() {
 	global $post;
-
 	wp_nonce_field( 'featured_event_meta_box', 'featured_event_meta_box_nonce' );
-
 	$value = get_post_meta( $post->ID, 'featured_event', true );
-	echo $value;
+	$checked = ($value === 'on' ? ' checked' : '');
+
 	?>
-	<label class="selectit"><input value="yes" type="checkbox" <?php checked($value) ?> name="featured_event"> Make Featured</label>
+	<label class="selectit"><input type="checkbox" <?php echo $checked; ?> name="featured_event"> Make Featured</label>
 <?php
 }
 
@@ -49,22 +46,18 @@ function featured_event_save_meta_box_data( $post_id ) {
 	 * We need to verify this came from our screen and with proper authorization,
 	 * because the save_post action can be triggered at other times.
 	 */
-
 	// Check if our nonce is set.
 	if ( ! isset( $_POST['featured_event_meta_box_nonce'] ) ) {
 		return;
 	}
-
 	// Verify that the nonce is valid.
 	if ( ! wp_verify_nonce( $_POST['featured_event_meta_box_nonce'], 'featured_event_meta_box' ) ) {
 		return;
 	}
-
 	// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
-
 	// Check the user's permissions.
 	if ( isset( $_POST['post_type'] ) && 'tribe_events' == $_POST['post_type'] ) {
 
@@ -89,6 +82,8 @@ function featured_event_save_meta_box_data( $post_id ) {
 	// Sanitize user input.
 	$my_data = $_POST['featured_event'];
 
+	echo $my_data;
+
 	// Update the meta field in the database.
-	update_post_meta( $post_id, 'tribe_events_featured_event', $my_data );
+	update_post_meta( $post_id, 'featured_event', $my_data );
 }

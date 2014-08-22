@@ -25,7 +25,7 @@ $more = false;
 		'meta_query' => array(
 			array(
 				'key' => 'featured_event',
-				'value' => 1
+				'value' => 'on'
 			)
 		),
 		"posts_per_page" => '10',
