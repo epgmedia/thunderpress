@@ -8,9 +8,7 @@
  * Author URI: http://zahlan.net/
  */
 
-if (!defined('Z_PLUGIN_URL'))
-
-	define('Z_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
+define('Z_PLUGIN_URL', get_template_directory_uri() . '/tribe-events' );
 
 define('Z_IMAGE_PLACEHOLDER', Z_PLUGIN_URL."/images/placeholder.png");
 

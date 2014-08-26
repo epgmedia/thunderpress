@@ -34,12 +34,13 @@ function eventFeaturedBox() {
 	$value = get_post_meta( $post->ID, 'featured_event', true );
 	$checked = ($value === 'on' ? ' checked' : '');
 
+	echo $checked;
 	?>
 	<label class="selectit"><input type="checkbox" <?php echo $checked; ?> name="featured_event"> Make Featured</label>
 <?php
 }
 
-add_action( 'save_post', 'featured_event_save_meta_box_data' );
+add_action( 'save_post_tribe_events', 'featured_event_save_meta_box_data' );
 function featured_event_save_meta_box_data( $post_id ) {
 
 	/*
@@ -48,26 +49,31 @@ function featured_event_save_meta_box_data( $post_id ) {
 	 */
 	// Check if our nonce is set.
 	if ( ! isset( $_POST['featured_event_meta_box_nonce'] ) ) {
+
 		return;
 	}
 	// Verify that the nonce is valid.
 	if ( ! wp_verify_nonce( $_POST['featured_event_meta_box_nonce'], 'featured_event_meta_box' ) ) {
+
 		return;
 	}
 	// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+
 		return;
 	}
 	// Check the user's permissions.
 	if ( isset( $_POST['post_type'] ) && 'tribe_events' == $_POST['post_type'] ) {
 
 		if ( ! current_user_can( 'edit_page', $post_id ) ) {
+
 			return;
 		}
 
 	} else {
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+
 			return;
 		}
 	}
@@ -76,6 +82,7 @@ function featured_event_save_meta_box_data( $post_id ) {
 
 	// Make sure that it is set.
 	if ( ! isset( $_POST['featured_event'] ) ) {
+
 		return;
 	}
 
