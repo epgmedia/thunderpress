@@ -4,7 +4,7 @@
  */
 
 include('class_category_images.php');
-include('admin-views/featured-event.class.php');
+include('admin-views/functions-featured-event.php');
 include('admin-views/category-settings.php');
 
 // Various Functions
@@ -21,8 +21,10 @@ include('inc/functions-single-event.php');
  * @return string
  */
 function event_excerpt( $length = 100 ) {
-
-	$excerpt = ( the_excerpt() > 0 ? substr( the_excerpt(), 0, $length ) : '' );
+	$excerpt = get_the_excerpt();
+	if ( strlen( $excerpt ) > 0 ) {
+		$excerpt = substr( get_the_excerpt(), 0, $length );
+	}
 
 	return $excerpt;
 }

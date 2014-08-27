@@ -13,67 +13,25 @@ if ( !defined('ABSPATH') ) { die('-1'); } ?>
 
 <?php
 global $more;
+global $post;
 $more = false;
 ?>
 <div class="tribe-events-loop vcalendar">
 
 	<!-- Featured Events Loop -->
-	<?php
-	$args = array(
-		"post_type" => 'tribe_events',
-		"eventDisplay" => 'upcoming',
-		'meta_query' => array(
-			array(
-				'key' => 'featured_event',
-				'value' => 'on'
-			)
-		),
-		"posts_per_page" => '10',
-		"start_date" => date('Y-m-d H:i:s', strtotime("now")),
-		'orderby' => 'event_date',
-		'order' => 'ASC'
-	);
-
-	$featured_events = new WP_query($args);
-	$featured_posts = array();
-
-	if (  $_REQUEST['tribe_paged'] < 2 ) {
-
-		if ( $featured_events->have_posts() ) { ?>
-
-			<?php while($featured_events->have_posts()): $featured_events->the_post(); ?>
-
-				<?php $featured_posts[] = get_the_ID(); ?>
-
-				<?php do_action( 'tribe_events_inside_before_loop' ); ?>
-
-				<!-- FEATURED -->
-				<div class="featured-event-label">
-					<span>Featured Event</span>
-				</div>
-
-				<!-- Featured Event  -->
-				<div id="post-<?php the_ID() ?>" class="<?php tribe_events_event_classes() ?> featured-event">
-					<?php tribe_get_template_part( 'list/featured-single', 'event' ) ?>
-				</div><!-- .hentry .vevent -->
-
-
-				<?php do_action( 'tribe_events_inside_after_loop' ); ?>
-			<?php endwhile; ?>
-
-		<?php } ?>
-
-	<?php } ?>
+	<?php featured_events_list (); ?>
 
 	<!-- Normal Events Loop -->
 	<?php while ( have_posts() ) : the_post(); ?>
 
-		<?php if( array_search( get_the_ID(), $featured_posts ) === FALSE ) { ?>
+		<?php //if( array_search( get_the_ID(), $featured_posts ) === FALSE ) { ?>
 
 			<?php do_action( 'tribe_events_inside_before_loop' ); ?>
 
 			<!-- Month / Year Headers -->
 			<?php tribe_events_list_the_date_headers(); ?>
+
+			<?php single_event_featured_banner(); ?>
 
 			<!-- Event  -->
 			<div id="post-<?php the_ID() ?>" class="<?php tribe_events_event_classes() ?>">
@@ -83,7 +41,7 @@ $more = false;
 
 			<?php do_action( 'tribe_events_inside_after_loop' ); ?>
 
-		<?php } ?>
+		<?php //} ?>
 
 	<?php endwhile; ?>
 

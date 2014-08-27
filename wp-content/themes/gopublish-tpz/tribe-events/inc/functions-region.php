@@ -50,7 +50,6 @@ if ( ! function_exists( 'epg_event_regions' ) ) {
 /**
  * Filter the archive_template with our custom function
  */
-
 add_filter( 'taxonomy_template', 'include_region_archive', 0 );
 function include_region_archive( $single ) {
 	/* Checks for single template by post type */
@@ -70,4 +69,16 @@ function epg_region_is_event_query( $tribe_is_event_query ) {
 	if ( is_tax( 'event_regions' ) ) return TRUE;
 
 	return $tribe_is_event_query;
+}
+
+/**
+ * Hide recurring events
+ */
+add_action( 'pre_get_posts', 'hide_recurring_events_regions');
+function hide_recurring_events_regions( WP_Query $query ) {
+	if ( is_tax( 'event_regions' ) ) {
+		$query->query_var['tribeHideRecurrence'] = 1;
+	}
+
+	return $query;
 }

@@ -21,6 +21,14 @@
 	background-color: #C47425;
 }
 
+.tribe-events-single .featured-event-label {
+	width: auto;
+	text-align: center;
+	font-size: 24px;
+	margin: 0 0 1em;
+	padding: 0.25em 0.2em 0.2em 0.1em;
+}
+
 #tribe-events-pg-template {
 	float: left;
 	width: 610px;

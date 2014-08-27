@@ -13,7 +13,6 @@
 if ( !defined('ABSPATH') ) { die('-1'); }
 
 $event_id = get_the_ID();
-
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single vevent hentry">
@@ -22,6 +21,8 @@ $event_id = get_the_ID();
 
 	<!-- Notices -->
 	<?php tribe_events_the_notices() ?>
+
+	<?php do_action ('epg_events_single_event_before_content'); ?>
 
 	<?php the_title( '<h1 class="tribe-events-single-event-title summary entry-title">', '</h1>' ); ?>
 

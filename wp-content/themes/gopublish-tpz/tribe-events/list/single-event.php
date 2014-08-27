@@ -31,7 +31,6 @@ $organizer = tribe_get_organizer();
 
 ?>
 
-
 <!-- Event Image -->
 <?php echo tribe_event_featured_image( null, array(200,200) ) ?>
 
