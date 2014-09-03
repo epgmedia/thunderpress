@@ -76,6 +76,7 @@ $event_id = get_the_ID();
 				tribe_get_template_part( 'modules/meta' );
 			else echo tribe_events_single_event_meta()
 			?>
+			<!-- After Meta -->
 			<?php do_action( 'tribe_events_single_event_after_the_meta' ) ?>
 		</div> <!-- #post-x -->
 		<?php if( get_post_type() == TribeEvents::POSTTYPE && tribe_get_option( 'showComments', false ) ) comments_template() ?>

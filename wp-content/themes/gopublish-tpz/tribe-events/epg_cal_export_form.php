@@ -1,10 +1,8 @@
 <?php
 /*
-Template Name: Export Form
+Template Name: Events Export Form
 */
 ?>
-<?php wp_enqueue_style( 'export-css', get_template_directory_uri() . '/tribe-events/export-events.css' ); ?>
-
 
 <?php get_header(); ?>
 
@@ -21,12 +19,17 @@ Template Name: Export Form
 			</p>
 
 			<p>
-				<label for="startdate">Start:</label><input type="date" name="startdate" value="" /> <label for="enddate">End:</label><input type="date" name="enddate" value="" />
+				<label for="startdate">Start:</label>
+				<input type="date" name="startdate" value="" />
+				<label for="enddate">End:</label>
+				<input type="date" name="enddate" value="" />
 			</p>
 
 			<h2>Categories</h2>
 
-			<p>Select category or categories:</p>
+			<p>
+				Select category or categories:
+			</p>
 
 			<ul>
 				<?php

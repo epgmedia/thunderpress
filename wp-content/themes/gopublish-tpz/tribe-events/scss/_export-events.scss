@@ -1,35 +1,40 @@
 @charset "UTF-8";
 
-section.export-events {
-	margin: 1em 2em 2em;
-	width: 90%;
-}
+.export-events {
 
-.export-events h1 {
+  margin: 1em 2em 2em;
+  width: 90%;
+
+  h1 {
 	font-size: 36px;
 	margin-bottom: 1em;
-}
+  }
 
-.export-events h2 {
+  h2 {
 	width: 70%;
-
 	border-bottom: 2px solid rgba(38, 38, 40, 0.4);
 	margin: 0.2em 0 0.5em;
-
 	font-size: 24px;
 	font-weight: 400;
 	line-height: 1.2em;
-}
+  }
 
-.export-events ul,
-.export-events p {
+  ul,
+  p {
 
 	margin: 0 0 1em 0;
 
 	font-size: 14px;
 	line-height: 1.2em;
+  }
+
+  ul {
+	list-style: none;
+  }
+
 }
 
-.export-events ul {
-	list-style: none;
-}
+
+
+
+

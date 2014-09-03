@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+/**
+ * Colors
+ */
+$primary_color   : #ffffff;
+$secondary_color : #003366;
+$tertiary_color  : #C47425;
+$link_color      : lighten( $secondary_color, 10% );
+
+/**
+ * Main CSS File
+ */
+@import 'scss/main';
+
+/**
+ * Export Page styling.
+ */
+@import 'scss/export-events';

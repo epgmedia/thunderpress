@@ -47,3 +47,18 @@ function epg_check_url( $url ) {
 		return 'http://' . $url;
 	}
 }
+
+/**
+ * Related Events View
+ */
+add_action( 'tribe_events_single_event_after_the_meta', 'related_venues_view' );
+function related_venues_view() { ?>
+	<!-- More Related Venues -->
+	<?php tribe_get_template_part( 'pro/related-events' ); ?>
+	<!-- END -->
+	<?php
+}
+
+function epg_venue_related_events() {
+
+}
