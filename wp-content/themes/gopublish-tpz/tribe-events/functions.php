@@ -3,7 +3,6 @@
  * Calendar functions
  */
 
-include('class_category_images.php');
 include('admin-views/functions-featured-event.php');
 include('admin-views/category-settings.php');
 

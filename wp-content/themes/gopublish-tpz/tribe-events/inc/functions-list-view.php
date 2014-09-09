@@ -7,6 +7,9 @@
  * Placed after header.php.
  */
 
+include( get_template_directory() . '/tribe-events/class_category_images.php');
+
+
 function before_calendar_content() {
 	do_action('before_content_area');
 }
@@ -18,7 +21,7 @@ add_action('before_content_area', 'calendar_hero');
 function calendar_hero() {
 	if ( ( tribe_is_past() || tribe_is_upcoming() ) && !is_tax() ) { ?>
 		<h1 class="calendar-title">Calendar</h1>
-		<div class="events-hero">
+		<div class="main-event-categories">
 			<?php calendar_hero_categories(); ?>
 		</div>
 	<?php }

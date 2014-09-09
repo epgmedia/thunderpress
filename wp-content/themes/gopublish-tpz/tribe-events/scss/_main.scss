@@ -1,62 +1,45 @@
 @charset "UTF-8";
 
 #tribe-events-pg-template {
-  float: left;
-  width: 610px;
-  padding: 5px 0 0 10px;
+  float   : left;
+  width   : 610px;
+  padding : 5px 0 0 10px;
 }
 
 /******************************************
 	Big Category Area on Home Page
 /******************************************/
+.main-event-categories { text-align : center; }
+
 .category-hero {
-  width: 22%;
-  height: 240px;
+  @include box-sizing();
 
-  overflow: hidden;
-  display: inline-block;
+  width    : em(215px);
+  height   : em(240px);
+  margin   : 0 11px 40px;
+  paddiing : 0;
+  border   : none;
+  display  : inline-block;
+  overflow : hidden;
 
-  margin: 20px 10px 10px;
-
-  border-left: 1px solid #dfdfdf;
-  border-bottom: 1px solid #dfdfdf;
-  border-right: 1px solid #c3c3c3;
+  background-color : #acacac;
 
   h2 {
-	z-index: 10;
-
-	color: $primary_color;
+	z-index : 10;
+	color   : $primary_color;
 	background-color: $secondary_color;
-
-	padding: 0.4em 0.3em;
-
+	padding : 0.4em 0.3em;
 	text-align: center;
 
 	a {
-	  color: $primary_color;
-	  background-color: $secondary_color;
+	  color : $primary_color;
+	  background-color : $secondary_color;
 
-	  font-weight: 100;
-	  text-decoration: none;
+	  font-weight : 100;
+	  text-decoration : none;
 
-	  :hover { text-decoration: underline; }
+	  &:hover { text-decoration : underline; }
 	}
-  }
-
-  h3 {
-
-	a {
-	  padding: 1em;
-	  color: #ffffff !important;
-	}
-  }
-
-  .event-details {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	bottom: 1em;
-	background-color: rgba( 0, 0, 0, 0.75);
   }
 }
 
@@ -64,25 +47,16 @@
   Individual Events as part of large
   category area
 ******************************************/
+.event-thumb {
+  width    : 100%;
+  height   : 100%;
+  margin   : 0;
+  overflow : hidden;
 
-.events-hero {
-  width: 100%;
-  padding: 10px;
-  margin-top: 0;
-  margin-bottom: 50px;
-
-  h1 { font-weight: 100; }
-
-  .event-thumb {
-	height:220px;
-	background-color: #acacac;
-	overflow: hidden;
-
-	img {
-	  position: relative;
-	  left: -10%;
-	  top: -10%;
-	}
+  img {
+	position : relative;
+	left     : -20%;
+	top      : -5%;
   }
 }
 
@@ -90,124 +64,130 @@
 	Featured Events Label
 ******************************************/
 .featured-event-label {
-  clear: both;
-  width: auto;
-  padding: 0.3em 0 0.2em 0.4em;
+  clear   : both;
+  width   : auto;
+  padding : 0.3em 0 0.2em 0.4em;
 
-  color: $primary_color;
-  background-color: $tertiary_color;
+  color : $primary_color;
+  background-color : $tertiary_color;
 
   span {
-	font-size: 16px;
-	text-transform: uppercase;
+	font-size      : em(16px);
+	text-transform : uppercase;
   }
 }
 
 .tribe-events-single {
 
   a {
-	color: $link_color;
+	color : $link_color;
   }
 
   .featured-event-label {
-	text-align: center;
-	margin: 0 0 1em;
+	margin     : 0 0 1em;
+	text-align : center;
   }
 }
 
 h1.calendar-title {
-  margin: 10px;
-  font-weight: 400;
+  margin      : 10px;
+  font-weight : 400;
 }
 
 /******************************************
 	Sidebar - Filter Module
 ******************************************/
 #tribe-events-bar {
-  width: 30%;
-  min-width: 100px;
-  float: left;
-  display: table-cell;
+  width     : 30%;
+  min-width : 100px;
+  float     : left;
+  display   : table-cell;
 
   div {
-	display: block;
-	clear: both;
-	width: 100% !important;
+	display : block;
+	clear   : both;
+	width   : 100% !important;
   }
 
 }
 
-#tribe-bar-views { padding: 0 !important; }
+#tribe-bar-views { padding : 0 !important; }
 
 /******************************************
 	Event listings
 ******************************************/
 .tribe-events-list {
-  float: right;
-  margin-top: 0;
-  width: 65%;
-  display: table-cell;
+  width      : 65%;
+  float      : right;
+  margin-top : 0;
+  display    : table-cell;
 
   .vevent.hentry {
-	background-color: #f2f2f2;
-	border: 1px solid #ececec;
-	padding: 1.25em 0.5em;
-	margin: 0 0 1.8em 0;
+	margin  : 0 0 1.8em 0;
+	padding : 1.25em 0.5em;
+	border  : 1px solid #ececec;
+	background-color : #f2f2f2;
+
+	.tribe-events-event-meta { clear : none;	}
+
   }
 }
 
 /** Width for Venue listings page **/
-.tribe-events-venue .tribe-main-list {
-  width: 100%;
-}
+.tribe-events-venue .tribe-main-list { width : 100%; }
 
 /******************************************
 	Single Event Meta Information
 ******************************************/
 .tribe-events-event-meta {
-  clear: none;
+  clear : none;
 
   .tribe-events-meta-group {
-	float: none;
-	display: block;
-	width: 100%;
+	width   : 100%;
+	padding : 0;
+	float   : none;
+	display : block;
 
-	h3 { border-bottom: 1px solid #000000; }
-  }
-}
-
-.tribe-events-meta-group-details {
-
-  dt { font-weight: bold; }
-
-  dd {
-
-	margin: 0 1em 0;
-
-	:after {
-	  content: "\A";
-	  white-space: pre;
+	&.tribe-events-meta-group-details,
+	&.tribe-events-meta-group-organizer {
+	  width : 50%;
+	  float : left;
 	}
-  }
 
-  .tribe-event-detail-label {
-	margin: 10px 15px 10px 0;
-	font-weight: bold;
-	line-height: 1.5em;
+	h3 { border-bottom : 1px solid #000000; }
+
+	dl {
+	  width    : 100%;
+	  overflow : hidden;
+	}
+
+	dt {
+	  font-size: em(14px);
+	  font-weight : bold;
+	}
+
+	dd {
+	  margin : 0 1em 0.5em 2em;
+	  @include clearfix();
+
+	}
+
+	.tribe-event-detail-label {
+	  margin      : 10px 15px 10px 0;
+	  font-weight : bold;
+	  line-height : 1.5em;
+	}
   }
 }
 
 .tribe-events-cal-links {
-  text-align: right;
+  text-align : right;
 
   a.tribe-events-gcal,
   a.tribe-events-ical {
-	float: none;
-	margin: 5px 6px 8px;
+	float  : none;
+	margin : 5px 6px 8px;
   }
 }
 
-.header-address {
-  text-decoration: underline;
-}
-
+.header-address { text-decoration : underline; }

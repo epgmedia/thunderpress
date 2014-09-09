@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+
+/**
+ * Fonts
+ **/
+$base_font_size: 12px;
+
 /**
  * Colors
  */
@@ -7,6 +13,11 @@ $primary_color   : #ffffff;
 $secondary_color : #003366;
 $tertiary_color  : #C47425;
 $link_color      : lighten( $secondary_color, 10% );
+
+/**
+ * Functions And Mixins
+ **/
+@import 'scss/functions';
 
 /**
  * Main CSS File
