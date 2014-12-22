@@ -206,11 +206,10 @@ function wptouch_the_time( $format = false ) {
 function wptouch_get_the_time( $format = false ) {
 	if ( !$format ) {
 		$date_format = get_option( 'date_format' );
-
 		$format = $date_format;
 	}
 
-	return apply_filters( 'wptouch_get_the_time', get_the_time( $format) );
+	return apply_filters( 'wptouch_get_the_time', get_the_time( $format ) );
 }
 
 function wptouch_has_tags() {
@@ -295,6 +294,16 @@ function wptouch_the_footer_message() {
 function wptouch_get_the_footer_message() {
 	$settings = wptouch_get_settings();
 	return apply_filters( 'wptouch_footer_message', $settings->footer_message );
+}
+
+function wptouch_have_comments() {
+	$comment_count = wptouch_get_comment_count();
+
+	if ( $comment_count > 0 ) {
+		return true;
+	}
+
+	return false;
 }
 
 function wptouch_the_comment_count() {
@@ -394,7 +403,7 @@ function wptouch_use_jquery_2() {
 	$settings = wptouch_get_settings();
 	if ( $settings->use_jquery_2 == true && !is_admin() ) {
 		wp_deregister_script( 'jquery' );
-		wp_register_script( 'jquery', 'http://code.jquery.com/jquery-2.1.1.min.js', false, '2.1.1', 1 );
+		wp_register_script( 'jquery', '//code.jquery.com/jquery-2.1.1.min.js', false, '2.1.1', 1 );
 		wp_enqueue_script( 'jquery' );
 	}
 }

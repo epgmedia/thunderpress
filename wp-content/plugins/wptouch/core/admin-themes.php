@@ -44,7 +44,7 @@ function wptouch_theme_info_url() {
 
 	if ( isset( $wptouch_cur_theme->info_url ) ) {
 		$url_parts = explode( '#', $wptouch_cur_theme->info_url );
-		$url = $url_parts[ 0 ] . '?utm_source=' . WPTOUCH_UTM_SOURCE . '&utm_campaign=theme-browser-' . $url_parts[ 1 ] . '&utm_source=web';
+		$url = $url_parts[ 0 ] . '?utm_source=' . WPTOUCH_UTM_SOURCE . '&utm_campaign=theme-browser-' . $url_parts[ 1 ] . '&utm_medium=web';
 
 		if ( $url_parts[ 1 ] ) {
 			$url .= '#' . $url_parts[ 1 ];
@@ -73,7 +73,6 @@ function wptouch_the_theme() {
 	global $wptouch_cur_theme;
 
 	$wptouch_cur_theme = $wptouch_theme_iterator->the_item();
-
 	return apply_filters( 'wptouch_theme', $wptouch_cur_theme );
 }
 
@@ -192,7 +191,7 @@ function wptouch_get_theme_location() {
 }
 
 function wptouch_get_theme_url() {
-	echo WP_CONTENT_URL . wptouch_get_theme_location();
+	return content_url() . wptouch_get_theme_location();
 }
 
 function wptouch_the_theme_url() {
@@ -281,6 +280,7 @@ function wptouch_get_theme_download_url() {
 
 function wptouch_get_theme_buy_url() {
 	global $wptouch_cur_theme;
+
 	if ( $wptouch_cur_theme && isset( $wptouch_cur_theme->buy_url ) ) {
 		return $wptouch_cur_theme->buy_url;
 	}
@@ -374,8 +374,7 @@ function wptouch_is_first_theme_preview_image() {
 
 function wptouch_get_theme_preview_url() {
 	global $wptouch_theme_preview_item;
-
-	return wptouch_get_theme_url() . '/preview/' . $wptouch_theme_preview_item;
+	return wptouch_check_url_ssl( wptouch_get_theme_url() . '/preview/' . $wptouch_theme_preview_item );
 }
 
 function wptouch_the_theme_preview_url() {

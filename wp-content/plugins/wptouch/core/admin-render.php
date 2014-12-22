@@ -25,7 +25,7 @@
 					<?php _e( 'Your WPtouch Pro license has expired. Renew now at a discount to continue receiving product updates and support.', 'wptouch-pro' ); ?>
 					<a href="http://www.wptouch.com/renew/?utm_campaign=renew-in-product&utm_medium=web&utm_source=wptouch" target="_blank" class="btn btn-small btn-warning"><?php _e( 'Renew Now', 'wptouch-pro' ); ?></a>
 				</div>
-			</div>						
+			</div>
 		<?php } else { ?>
 			<?php if ( wptouch_should_show_license_nag() && $_GET['page'] != 'wptouch-admin-license' ) { ?>
 				<div class="alert-wrap">
@@ -85,7 +85,7 @@
 		<?php } ?>
 		</div>
 	</div>
-	<?php if ( ( $_GET['page'] != 'wptouch-admin-touchboard' ) && ( $_GET['page'] != 'wptouch-admin-license' ) && ( $_GET['page'] != 'wptouch-admin-themes-and-addons' ) && ( $_GET['page'] != 'wptouch-admin-upgrade' ) ) { ?>
+	<?php if ( ( $_GET['page'] != 'wptouch-admin-touchboard' ) && ( $_GET['page'] != 'wptouch-admin-license' ) && ( $_GET['page'] != 'wptouch-admin-themes-and-addons' ) && ( $_GET['page'] != 'wptouch-admin-upgrade' ) &&  ( $_GET['page'] != 'wptouch-admin-upgrade-license' ) ) { ?>
 		<br /><br /><br /><!-- add some space above -->
 		<input type="submit" name="wptouch-submit-3" id="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wptouch-pro' ); ?>" />
 		<input type="submit" name="wptouch-preview-theme" id="preview" class="preview-button button-secondary" value="<?php _e( "Preview Theme", "wptouch-pro" ); ?>" data-url="<?php wptouch_bloginfo( 'url' ); ?>/?wptouch_preview_theme=enabled"  />

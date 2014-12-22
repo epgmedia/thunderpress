@@ -124,7 +124,7 @@ function wptouchHandleLicensePanel() {
 							jQuery( activate ).show();
 							wptouchProgressBarReset( progressBar );
 						}, 5250 );
-						jQuery( '#license-expired-error' ).fadeIn();					
+						jQuery( '#license-expired-error' ).fadeIn();
 					}
 				});
 			});
@@ -233,16 +233,30 @@ function wptouchSetupHomescreenUploaders() {
 				},
 				onComplete: function( fileName, response ) {
 					jQuery( '.' + baseId + '_wrap' ).find( '.progress .bar' ).css( 'width', '100%' );
-					jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).removeClass( 'progress-info active progress-striped' ).addClass( 'progress-success' );
-					// Remove placeholder background if we have an image
-					thisUploader.find( '.image-placeholder' ).css( 'background', 'none' );
+					if ( response != 'invalid image' ) {
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).removeClass( 'progress-info active progress-striped progress-danger' ).addClass( 'progress-success' );
+						// Remove placeholder background if we have an image
+						thisUploader.find( '.image-placeholder' ).css( 'background', 'none' );
+						setTimeout( function() {
+							jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).tooltip( 'show' );
+							thisUploader.find( '.image-placeholder' ).html( '<img src="' + response + '" />');
+						},
+						1250 );
+					} else {
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).attr( 'title', WPtouchCustom.upload_invalid );
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).attr( 'data-original-title', WPtouchCustom.upload_invalid );
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).removeClass( 'progress-info active progress-striped progress-success' ).addClass( 'progress-danger' );
+						setTimeout( function() {
+							jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).tooltip( 'show' );
+						},
+						1250 );
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress .bar' ).css( 'background-color', '#b14353' );
+					}
 					setTimeout( function() {
-						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).tooltip( 'show' );
-						thisUploader.find( '.image-placeholder' ).html( '<img src="' + response + '" />');
-					},
-					1250 );
-					setTimeout( function() {
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress .bar' ).css( 'background-color', '#62c462' );
 						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).tooltip( 'hide' );
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).attr( 'title', WPtouchCustom.upload_complete );
+						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).attr( 'data-original-title', WPtouchCustom.upload_complete );
 						jQuery( '.' + baseId + '_wrap' ).find( '.progress' ).hide();
 						deleteButton.show();
 					},
@@ -380,7 +394,7 @@ function wptouchHandleMenuArea(){
 	// Handle "Check All"
 
 	jQuery( '#menu-set-options' ).on( 'click', 'a.check-all', function( e ) {
-		menuEnable.find( 'input' ).each( function() {
+		jQuery( '.menu-item-list:visible' ).find( 'input' ).each( function() {
 			// Check all items that *aren't* checked already
 			if ( !jQuery( this ).is( ':checked' ) ) {
 				jQuery( this ).click();
@@ -390,7 +404,7 @@ function wptouchHandleMenuArea(){
 
 	// Now handle "Check None"
 	}).on( 'click', 'a.check-none', function( e ) {
-		menuEnable.find( 'input' ).each( function() {
+		jQuery( '.menu-item-list:visible' ).find( 'input' ).each( function() {
 			// Check all items that *are* checked already
 			if ( jQuery( this ).is( ':checked' ) ) {
 				jQuery( this ).trigger( 'click' );
@@ -763,11 +777,13 @@ function wptouchRefreshScrollers(){
 
 function wptouchSetupAdminToggles() {
 	// Enable iOS Web-App Mode
-	wptouchCheckToggle( '#webapp_mode_enabled', '#setting-webapp_enable_persistence, #section-notice-message, #section-iphone-startup-screen, #section-retina-iphone-startup-screen, #section-iphone-5-startup-screen, #section-ipad-mini-and-ipad-startup-screens, #setting-webapp_ignore_urls, #setting-webapp_external_message, #section-retina-ipad-startup-screens' );
+	wptouchCheckToggle( '#webapp_mode_enabled', '#setting-webapp_enable_persistence, #section-notice-message, #section-iphone-startup-screen, #section-retina-iphone-startup-screen, #section-iphone-5-startup-screen, #section-iphone-6-startup-screen, #section-iphone-6plus-startup-screen, #section-ipad-mini-and-ipad-startup-screens, #setting-webapp_ignore_urls, #setting-webapp_external_message, #section-retina-ipad-startup-screens' );
 	// Show a notice message for iPhone, iPod touch & iPad visitors about Web-App Mode
 	wptouchCheckToggle( '#webapp_show_notice', '#setting-webapp_notice_message, #setting-webapp_notice_expiry_days' );
 	// Include functions.php from Desktop theme method
 	wptouchCheckToggle( '#include_functions_from_desktop_theme', '#setting-functions_php_loading_method' );
+	// Filter URLS
+	wptouchCheckToggle( '#enable_url_filter', '#setting-url_filter_behaviour, #setting-filtered_urls' );
 	// Cache menu settings (advanced)
 	wptouchCheckToggle( '#show_share', '#setting-share_location, #setting-share_colour_scheme' );
 	wptouchCheckToggle( '#automatically_backup_settings', '#setting-backup' );
@@ -826,7 +842,7 @@ var wptouchPreviewWindow;
 // The Preview Pop-Up Window
 function wptouchPreviewWindow(){
 
-	var previewEl = jQuery( 'input#preview' );
+	var previewEl = jQuery( '.preview-button' );
 
 	if ( wptouchIsWebKit() ) {
 		previewEl.on( 'click', function( e ) {
@@ -941,6 +957,10 @@ function wptouchLoadTouchBoardArea() {
 }
 
 function wptouchLoadUpgradeArea() {
+	jQuery( 'button#upgrade-to-pro' ).on( 'click', function(){
+		window.location = jQuery( this ).attr( 'data-target' );
+	});
+
 	var upgrade = jQuery( '#upgrade-area' );
 	if ( upgrade.length ) {
 		var ajaxParams = {};
@@ -1049,6 +1069,9 @@ function wptouchLoadThemes() {
 			} else {
 				themesDiv.find( '.load' ).parent().replaceWith( result );
 
+				wptouchPreviewWindow();
+				wptouchHandleThemePreview();
+
 				jQuery( '#setup-themes-browser' ).on( 'click', 'a.download, a.upgrade', function( e ) {
 					var pressedButton = jQuery( this );
 					var installURL = jQuery( this ).attr( 'data-url' );
@@ -1135,15 +1158,43 @@ function wptouchAdminHandleGeneral() {
 	wptouchCheckToggle( '#show_wptouch_in_footer', '#setting-add_referral_code' );
 }
 
+function wptouchHandleThemePreview() {
+	function triggerPreview( targetImage ) {
+		jQuery( '#' + targetImage.attr( 'id' ) + '-preview' ).trigger( 'click' );
+	}
+
+	if ( wptouchIsWebKit() ) {
+		jQuery( '#setup-themes-browser .view' ).addClass( 'webkit' ).text( WPtouchCustom.open_theme_demo );
+		jQuery( '#setup-themes-browser' ).find( '.image-wrapper' ).on( 'click', 'img' , function( e ) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			triggerPreview( jQuery( this ) );
+		});
+
+		jQuery( '#setup-themes-browser' ).find( '.image-wrapper' ).on( 'click', '.view' , function( e ) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			triggerPreview( jQuery( this ).siblings( 'img' ).first() );
+		});
+
+	}
+}
+
 function wptouchShowProItems() {
 	jQuery( '.wptouch-free #foundation-page-webapp' ).find( 'div, li' ).show();
 	jQuery( '.wptouch-free #foundation-page-webapp div.progress' ).hide();
-
 	jQuery( '.wptouch-free #foundation-page-advertising' ).find( 'div, li' ).show();
 	jQuery( '.wptouch-free .pro-setting input, .wptouch-free .pro-setting select, .wptouch-free .pro-setting button, .wptouch-free .pro-setting textarea' ).prop( 'disabled', 'disabled' );
 }
 
+function wptouchSetupUpgradePage() {
+	wrapper_height = jQuery( window ).height();
+	jQuery( 'iframe#upgrade-license-area' ).height( wrapper_height - 150);
+}
 
+jQuery( window ).resize( function() {
+	wptouchSetupUpgradePage();
+});
 
 function wptouchAdminReady() {
 
@@ -1176,7 +1227,11 @@ function wptouchAdminReady() {
 	wptouchLoadThemes();
 	wptouchLoadAddons();
 
+	wptouchHandleThemePreview();
+
 	wptouchShowProItems();
+
+	wptouchSetupUpgradePage()
 }
 
 jQuery( document ).ready( function() {

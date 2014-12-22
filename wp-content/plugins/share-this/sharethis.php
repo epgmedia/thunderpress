@@ -22,8 +22,8 @@
  Plugin Name: ShareThis
  Plugin URI: http://www.sharethis.com
  Description: Let your visitors share a post/page with others. Supports e-mail and posting to social bookmarking sites. <a href="options-general.php?page=sharethis.php">Configuration options are here</a>. Questions on configuration, etc.? Make sure to read the README.
- Version: 7.0.14
- Author: <a href="http://www.sharethis.com">Kalpak Shah@ShareThis</a>
+ Version: 7.0.18
+ Author: <a href="http://www.sharethis.com">The ShareThis Team</a>
  Author URI: http://www.sharethis.com
  */
 
@@ -157,9 +157,7 @@ function checkForOldVersionOptions($var, &$upgradeFromOld) {
 
 function uninstall_ShareThis()
 {
-	$st_options = array('st_current_type', 'st_pages_on_top', 'st_posts_on_top', 'st_pages_on_bot', 'st_posts_on_bot', 'st_page',
-						'st_prompt','st_pubid','st_sent','st_services','st_hoverbar_services','st_pulldownbar_services', 'st_tags',
-						'st_upgrade_five','st_version','st_widget','st_username','st_pulldownlogo','copynshareSettings','protocolType', 'st_protocol');						
+	$st_options = array('st_current_type', 'st_pages_on_top', 'st_posts_on_top', 'st_pages_on_bot', 'st_posts_on_bot', 'st_post_excerpt', 'st_page','st_prompt','st_pubid','st_sent','st_services','st_hoverbar_services','st_pulldownbar_services', 'st_tags',	'st_upgrade_five','st_version','st_widget','st_username','st_pulldownlogo','copynshareSettings','protocolType', 'st_protocol');						
 	foreach ($st_options as $option){
 		delete_option($option);
 	}
@@ -221,7 +219,7 @@ function sendWelcomeEmail($newUser){
 
 	$body = "The ShareThis plugin on your website has been activated on ".get_option('siteurl')."\n\n"
 	."If you would like to customize the look of your widget, go to the ShareThis Options page in your WordPress administration area. $updatePage\n\n" 
-	."Get more information on customization options at http://help.sharethis.com/integration/wordpress." 
+	."Get more information on customization options at http://support.sharethis.com/customer/portal/articles/446440-wordpress-integration" 
 	."To get reporting on share data login to your account at http://www.sharethis.com/account and choose options in the Analytics section\n\n"
     ."If you have any additional questions or need help please email us at support@sharethis.com\n\n--The ShareThis Team";
 
@@ -234,7 +232,7 @@ function sendWelcomeEmail($newUser){
 		$subject = "ShareThis WordPress Plugin Activation";
 		$body ="Thanks for installing the ShareThis plugin on your blog.\n\n" 
 		."If you would like to customize the look of your widget, go to the ShareThis Options page in your WordPress administration area. $updatePage\n\n" 
-		."Get more information on customization options at http://help.sharethis.com/integration/wordpress.\n\n" 		
+		."Get more information on customization options at http://support.sharethis.com/customer/portal/articles/446440-wordpress-integration\n\n" 		
 		."If you have any additional questions or need help please email us at support@sharethis.com\n\n--The ShareThis Team";
 	}
 	$headers = "From: ShareThis Support <support@sharethis.com>\r\n" ."X-Mailer: php";
@@ -249,7 +247,7 @@ function sendUpgradeEmail() {
 	
 	$body = "The ShareThis plugin on your website has been updated!\n\n"
 	."If you would like to customize the look of your widget, go to the ShareThis Options page in your WordPress administration area. $updatePage\n\n" 
-	."Get more information on customization options at http://help.sharethis.com/integration/wordpress." 
+	."Get more information on customization options at http://support.sharethis.com/customer/portal/articles/446440-wordpress-integration" 
 	."To get reporting on share data login to your account at http://www.sharethis.com/account and choose options in the Analytics section\n\n"
     ."If you have any additional questions or need help please email us at support@sharethis.com\n\n--The ShareThis Team";
 
@@ -299,6 +297,10 @@ function st_show_buttons($content) {
 	global $post;
 	$postType = $post->post_type;
 	
+	if( !is_singular(array('post', 'page') ) &&  get_option('st_post_excerpt') == 'false') {
+		return $content; // do not proceed - user has checked the option to hide buttons on excerpts		
+	}
+	
 	$getTopOptions = get_option('st_'.$postType.'s_on_top');
 	$getBotOptions = get_option('st_'.$postType.'s_on_bot');
 
@@ -334,8 +336,11 @@ function adding_st_filters(){
 		
 		// META GRAPH Plugin conflicts with Buttons Excerpts
 		$current_plugins = get_option('active_plugins');		
-		if( !( (in_array('wp-open-graph/wp-open-graph.php', $current_plugins)) ||
-			(in_array('wp-open-graph-meta/wp-open-graph-meta.php', $current_plugins)) )
+		if( (!( (in_array('wp-open-graph/wp-open-graph.php', $current_plugins)) ||
+			(in_array('wp-open-graph-meta/wp-open-graph-meta.php', $current_plugins)) ) )
+			&&
+			(!( (in_array('facebook/facebook.php', $current_plugins)) &&
+			(in_array('wordpress-seo/wp-seo.php', $current_plugins)) ))
 			) {
 			// 2008-08-15 Excerpts don't play nice due to strip_tags().
 			add_filter('get_the_excerpt', 'st_remove_st_add_link',9);
@@ -483,6 +488,12 @@ function st_request_handler() {
 							update_option('st_posts_on_bot', '' );
 						}
 						
+						if($_POST['st_post_excerpt'] == 'true'){
+							update_option('st_post_excerpt', $_POST['st_post_excerpt'] );
+						} else {
+							update_option('st_post_excerpt', 'false' );
+						}
+						
 						$selPages = $_POST['st_page'];
 						if((!empty($_POST['st_pages_on_top']) || !empty($_POST['st_pages_on_bot'])) && (!empty($selPages) && count($selPages) > 0)) {
 							update_option('st_page', $selPages);
@@ -519,6 +530,7 @@ function st_options_form() {
 	$stPagesBot = get_option('st_pages_on_bot');
 	$stPostsTop = get_option('st_posts_on_top');
 	$stPostsBot = get_option('st_posts_on_bot');
+	$stPostExcerpt = get_option('st_post_excerpt');
 	$freshInstalation = empty($services)?1:0;
 	$sharenow_style = "3"; // Default Style
 
@@ -546,6 +558,16 @@ function st_options_form() {
 	} else if($stPostsTop == 'top' && empty($stPostsBot)) {
 		$checkPostsTop = 'checked="checked"';
 		$checkPostsBot = '';	
+	}
+	
+	$checkPostExcerpt = '';
+	if($stPostExcerpt == 'true') {
+		$checkPostExcerpt = 'checked="checked"';		
+	}else if($stPostExcerpt == 'false') {
+		$checkPostExcerpt = '';		
+	}else {
+		// First installation - By default Checked
+		$checkPostExcerpt = 'checked="checked"';
 	}
 	
 	$isSecure = '';
@@ -948,25 +970,37 @@ function st_options_form() {
 											<div style="margin-top:10px;">
 												<div style="float:left;"> 
 													<span style="cursor:auto;"><input id="st_pages_on_top" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="top" name="st_pages_on_top" '.$checkPagesTop.'></span>
-													<span>Show widget on <strong style="font-family: sans-serif;font-weight:bold;">top of pages</strong></span>
+													<span>Show buttons on <strong style="font-family: sans-serif;font-weight:bold;">top of pages</strong></span>
 												</div>
 												<div style="margin-top: 5px"> 
-													<span style="cursor:auto;margin-left:264px"><input id="st_posts_on_top" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="top" name="st_posts_on_top" '.$checkPostsTop.'></span>
-													<span>Show widget on <strong style="font-family: sans-serif;font-weight:bold;">top of posts</strong></span>
+													<span style="cursor:auto;margin-left:264px"><input id="st_posts_on_top" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="top" name="st_posts_on_top" onclick="setPostExcerpt()" '.$checkPostsTop.'></span>
+													<span>Show buttons on <strong style="font-family: sans-serif;font-weight:bold;">top of posts</strong></span>
 												</div>												
 											</div>
 											<div>
 												<div style="float:left;">
 													<span style="cursor:auto;"><input id="st_pages_on_bot" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="bot" name="st_pages_on_bot" '.$checkPagesBot.'></span>
-													<span>Show widget on <strong style="font-family: sans-serif;font-weight:bold;">bottom of pages</strong></span>
+													<span>Show buttons on <strong style="font-family: sans-serif;font-weight:bold;">bottom of pages</strong></span>
 												</div>
 												<div style="margin-top: 7px">
-													<span style="cursor:auto;margin-left:264px;"><input id="st_posts_on_bot" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="bot" name="st_posts_on_bot" '.$checkPostsBot.'></span>
-													<span>Show widget on <strong style="font-family: sans-serif;font-weight:bold;">bottom of posts</strong></span>
+													<span style="cursor:auto;margin-left:264px;"><input id="st_posts_on_bot" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="bot" name="st_posts_on_bot" onclick="setPostExcerpt()" '.$checkPostsBot.'></span>
+													<span>Show buttons on <strong style="font-family: sans-serif;font-weight:bold;">bottom of posts</strong></span>
 												</div>												
 											</div>
 									  </div>
 									  <div style="margin-bottom:30px;"></div>
+									  <div class="wp_st_customizewidget_heading" style="padding-bottom:5px;">
+											<span>Customize Post Excerpts</span>
+										</div>
+									  <div>
+										<div style="float:left;">
+											<div style="margin-top: 7px">
+													<span style="cursor:auto;margin-left:52px;"><input id="st_post_excerpt" class="cnsCheck wp_st_defaultCursor" type="checkbox" value="true" name="st_post_excerpt" '.$checkPostExcerpt.'></span>
+													<span>Show buttons on <strong style="font-family: sans-serif;font-weight:bold;">Post Excerpt</strong></span>
+												</div>	
+										</div>
+									   </div>		
+									  <div style="margin-bottom:50px;"></div>
 									  <div class="wp_st_customizewidget_heading">
 											<span class="heading">
 											<span id="headingimgPageList" class="headingimgPageList_right"></span>

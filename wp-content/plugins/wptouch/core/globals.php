@@ -133,6 +133,11 @@ function wptouch_is_multisite_enabled() {
 	return is_multisite();
 }
 
+function wptouch_get_supported_user_agents() {
+	global $wptouch_pro;
+	return $wptouch_pro->get_supported_user_agents();
+}
+
 function wptouch_is_showing_mobile_theme_on_mobile_device() {
 	global $wptouch_pro;
 
@@ -215,7 +220,7 @@ function wptouch_get_desktop_switch_link() {
 	if ( isset( $wptouch_pro->post[ 'wptouch_switch_location' ] ) ) {
 		$redirect_location = $wptouch_pro->post[ 'wptouch_switch_location' ];
 	} else {
-		$redirect_location = $_SERVER['REQUEST_URI'];
+		$redirect_location = esc_url_raw( $_SERVER['REQUEST_URI'], array( 'http', 'https' ) );
 	}
 
 	return apply_filters( 'wptouch_desktop_switch_link', get_bloginfo( 'url' ) . '?wptouch_switch=mobile&amp;redirect=' . urlencode( $redirect_location ) );
@@ -399,7 +404,7 @@ function wptouch_get_desktop_bloginfo( $param ) {
                 case 'stylesheet_directory':
                 case 'template_url':
                 case 'template_directory':
-                        return WP_CONTENT_URL . '/themes/' . get_option( 'template' );
+                        return content_url() . '/themes/' . get_option( 'template' );
                 default:
                         return get_bloginfo( $param );
         }
