@@ -83,7 +83,7 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 	</h4>
 	<?php } ?>
 	<div class="widgetbody3" style="background:none !important;padding:0px !important;">
-	<?
+	<?php
 
 			if ($instance['ad-type'] == "Ad Tag") {
 			
@@ -120,7 +120,7 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 	<?php } ?>
 	<div class="widgetbody3" <?php if ($customcolors==on) { ?> style="
 		background-color:<?php echo $instance['widget-background']; ?> !important; 
-	"<?php } ?>><?
+	"<?php } ?>><?php
 
 			
 			if ($instance['ad-type'] == "Ad Tag") {

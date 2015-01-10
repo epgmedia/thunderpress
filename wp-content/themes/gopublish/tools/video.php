@@ -84,7 +84,7 @@ class sno_video extends WP_Widget {
 
                  		<?php $video = get_post_meta($post->ID, video, true); if ($video) { ?><?php $pattern = "/height=\"[0-9]*\"/"; $video = preg_replace($pattern, "height='$videoheight'", $video); $pattern = "/width=\"[0-9]*\"/"; $video = preg_replace($pattern, "width='100%'", $video); echo $video; ?>
 					
-						<div style="<?php if ((($instance['show-headline']==on) || ($instance['show-teaser']==on) || ($instance['show-date']==on) || ($instance['show-comments']==on) || ($instance['show-writer']) || (is_user_logged_in())) && ($instance['remove-padding']==on)) { ?>padding:5px 10px 0px 10px;<? } ?>">
+						<div style="<?php if ((($instance['show-headline']==on) || ($instance['show-teaser']==on) || ($instance['show-date']==on) || ($instance['show-comments']==on) || ($instance['show-writer']) || (is_user_logged_in())) && ($instance['remove-padding']==on)) { ?>padding:5px 10px 0px 10px;<?php } ?>">
 
 						<?php if ($instance['show-writer'] == "on") { 
                 		$videographer=get_post_meta($post->ID, videographer, true); if ($videographer) { ?><p class="photocredit">Video Credit: <?php echo $videographer; ?></p><?php } ?>

@@ -1,0 +1,220 @@
+/**
+ * Fonts
+ **/
+/**
+ * Colors
+ */
+/**
+ * Functions And Mixins
+ **/
+/** functions **/
+/** Px to Em **/
+/** Clearfix **/
+/**
+ * Always a handy mixin. Set every border radius or
+ * just a single side without worrying about all
+ * those prefixes.
+ **/
+/** Set Opacity with IE Fallback **/
+/**
+ * Pass in the desired location of your target
+ * element to produce all the necessary positioning
+ * code.
+ **/
+/** Breakpoint Mixins **/
+/**
+.sidebar {
+  width: 60%
+  float: left;
+  margin: 0 2% 0 0;
+  @include bp-small {
+	width: 100%;
+	float: none;
+	margin: 0;
+  }
+}
+**/
+/**
+Box Sizing
+**/
+/**
+ * Main CSS File
+ */
+#tribe-events-pg-template {
+  float: left;
+  width: 610px;
+  padding: 5px 0 0 10px; }
+
+/******************************************
+	Big Category Area on Home Page
+/******************************************/
+.main-event-categories {
+  text-align: center; }
+
+.category-hero {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 17.91667em;
+  height: 20em;
+  margin: 0 11px 40px;
+  paddiing: 0;
+  border: none;
+  display: inline-block;
+  overflow: hidden;
+  background-color: #acacac; }
+  .category-hero h2 {
+    z-index: 10;
+    color: white;
+    background-color: #003366;
+    padding: 0.4em 0.3em;
+    text-align: center; }
+    .category-hero h2 a {
+      color: white;
+      background-color: #003366;
+      font-weight: 100;
+      text-decoration: none; }
+      .category-hero h2 a:hover {
+        text-decoration: underline; }
+
+/******************************************
+  Individual Events as part of large
+  category area
+******************************************/
+.event-thumb {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden; }
+  .event-thumb img {
+    position: relative;
+    left: -20%;
+    top: -5%; }
+
+/******************************************
+	Featured Events Label
+******************************************/
+.featured-event-label {
+  clear: both;
+  width: auto;
+  padding: 0.3em 0 0.2em 0.4em;
+  color: white;
+  background-color: #c47425; }
+  .featured-event-label span {
+    font-size: 1.33333em;
+    text-transform: uppercase; }
+
+.tribe-events-single a {
+  color: #004c99; }
+.tribe-events-single .featured-event-label {
+  margin: 0 0 1em;
+  text-align: center; }
+
+h1.calendar-title {
+  margin: 10px;
+  font-weight: 400; }
+
+/******************************************
+	Sidebar - Filter Module
+******************************************/
+#tribe-events-bar {
+  width: 30%;
+  min-width: 100px;
+  float: left;
+  display: table-cell; }
+  #tribe-events-bar div {
+    display: block;
+    clear: both;
+    width: 100% !important; }
+
+#tribe-bar-views {
+  padding: 0 !important; }
+
+/******************************************
+	Event listings
+******************************************/
+.tribe-events-list {
+  width: 65%;
+  float: right;
+  margin-top: 0;
+  display: table-cell; }
+  .tribe-events-list .vevent.hentry {
+    margin: 0 0 1.8em 0;
+    padding: 1.25em 0.5em;
+    border: 1px solid #ececec;
+    background-color: #f2f2f2; }
+    .tribe-events-list .vevent.hentry .tribe-events-event-meta {
+      clear: none; }
+
+/** Width for Venue listings page **/
+.tribe-events-venue .tribe-main-list {
+  width: 100%; }
+
+/******************************************
+	Single Event Meta Information
+******************************************/
+.tribe-events-event-meta {
+  clear: none; }
+  .tribe-events-event-meta .tribe-events-meta-group {
+    width: 100%;
+    padding: 0;
+    float: none;
+    display: block; }
+    .tribe-events-event-meta .tribe-events-meta-group.tribe-events-meta-group-details, .tribe-events-event-meta .tribe-events-meta-group.tribe-events-meta-group-organizer {
+      width: 50%;
+      float: left; }
+    .tribe-events-event-meta .tribe-events-meta-group h3 {
+      border-bottom: 1px solid #000000; }
+    .tribe-events-event-meta .tribe-events-meta-group dl {
+      width: 100%;
+      overflow: hidden; }
+    .tribe-events-event-meta .tribe-events-meta-group dt {
+      font-size: 1.16667em;
+      font-weight: bold; }
+    .tribe-events-event-meta .tribe-events-meta-group dd {
+      margin: 0 1em 0.5em 2em; }
+      .tribe-events-event-meta .tribe-events-meta-group dd:before, .tribe-events-event-meta .tribe-events-meta-group dd:after {
+        content: "";
+        display: table; }
+      .tribe-events-event-meta .tribe-events-meta-group dd:after {
+        clear: both; }
+    .tribe-events-event-meta .tribe-events-meta-group .tribe-event-detail-label {
+      margin: 10px 15px 10px 0;
+      font-weight: bold;
+      line-height: 1.5em; }
+
+.tribe-events-cal-links {
+  text-align: right; }
+  .tribe-events-cal-links a.tribe-events-gcal,
+  .tribe-events-cal-links a.tribe-events-ical {
+    float: none;
+    margin: 5px 6px 8px; }
+
+.header-address {
+  text-decoration: underline; }
+
+/**
+ * Export Page styling.
+ */
+.export-events {
+  width: 90%;
+  margin: 1em 2em 2em; }
+  .export-events h1 {
+    margin-bottom: 1em;
+    font-size: 36px; }
+  .export-events h2 {
+    width: 70%;
+    margin: 0.2em 0 0.5em;
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 1.2em;
+    border-bottom: 2px solid rgba(38, 38, 40, 0.4); }
+  .export-events ul,
+  .export-events p {
+    margin: 0 0 1em 0;
+    font-size: 1.16667em;
+    line-height: 1.2em; }
+  .export-events ul {
+    list-style: none; }
